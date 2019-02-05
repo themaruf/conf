@@ -1,3 +1,6 @@
 <?php
-	header("Location: ../conf/public");
+	
+//test
+header("Location: ../conf/public");
+
 ?>
