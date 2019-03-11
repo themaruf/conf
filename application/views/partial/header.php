@@ -7,9 +7,12 @@
 
 	<link rel="shortcut icon" type="image/x-icon" href="<?php echo base_url();?>images/icon.png"/>
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url();?>css/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url();?>css/login.css"/>
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url();?>css/styles.css"/>
 
 	<script src="<?php echo base_url();?>js/jquery-3.3.1.min.js"></script>
 	<script src="<?php echo base_url();?>js/bootstrap.min.js"></script>
+	<script src="<?php echo base_url();?>js/jquery-ui.js"></script>
 	<style type="text/css">
 		html {
 			overflow: auto;
@@ -42,10 +45,7 @@
         </div>
       </li>
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
+
   </div>
 </nav>
 
