@@ -11,6 +11,7 @@ $this->load->view("partial/header");
 		    <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
 		    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
 		  </div>
+      <br/>
 </div>
       <table class="table table-bordered table-striped">
         <tr>
