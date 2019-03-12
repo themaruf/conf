@@ -11,8 +11,9 @@ $this->load->view("partial/header");
 	</div>
 	
 <?php echo validation_errors();?>
-
-
+      <div class="success">'
+            <?php if ( $message != null ) echo $message;?>
+      </div>
 <?php echo form_open('authors/login', array('id' => 'login-form')) ?>
       <input type="text" name="email" value="<?php echo set_value('email'); ?>" placeholder="email"/>
       <input type="password" name="password" value="<?php echo set_value('password'); ?>" placeholder="password"/>

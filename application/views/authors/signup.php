@@ -11,6 +11,9 @@ $this->load->view("partial/header");
 	</div>
 	
 <?php echo validation_errors();?>
+      <div class="error">'
+            <?php if ( $message!= null ) echo $message;?>
+      </div>
 <?php echo form_open('authors/validate', array('id' => 'signup-form')) ?>
       <input type="text" name="first_name" value="<?php echo set_value('first_name'); ?>" placeholder="First Name"/>
       <input type="text" name="last_name" value="<?php echo set_value('last_name'); ?>" placeholder="Last Name"/>

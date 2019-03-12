@@ -9,7 +9,7 @@ $this->load->view("partial/header");
 </head>
 <body>
 	<center>
-	<div class="container">
+	<div>
           <h1 class="jumbotron-heading">CONFMAG</h1>
           <h6>A Conference Management System for Research Development</h6>
           <p class="lead text-muted">A Research Development Project - Authors, Reviewer, Conferences Chair and the thousands of others from over 100 countries explore PROCONF to power their conferences, workshops, symposia, journals, books, grants, and competitions</p>
