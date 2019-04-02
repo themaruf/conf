@@ -54,6 +54,14 @@ class Author extends CI_Model
 
             return $query->row();
         }
+
+        public function upload_file($filedata){
+            $paper_data = array(
+                'paper_name' => $filedata['file_name'],
+                'file_url' => $filedata['full_path']
+            );
+            return $this->db->insert('papers', $paper_data);  
+        }
         
 
 }

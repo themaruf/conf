@@ -99,6 +99,40 @@ class Authors extends CI_Controller {
         }
 	}
 
+
+	public function do_upload(){
+		$config = array(
+		'upload_path' => "./uploads/",
+		'allowed_types' => "pdf",
+		'overwrite' => TRUE,
+		'max_size' => "8048000", // Can be set to particular file size , here it is 8 MB
+		'max_height' => "768",
+		'max_width' => "1024"
+		);
+
+		//echo var_dump($config['upload_path']);
+
+		//$this->load->library('upload', $config);
+		$this->upload->initialize($config);
+		if($this->upload->do_upload())
+		{
+			$data = array('upload_data' => $this->upload->data());
+			//print_r($data);
+
+			if($this->Author->upload_file($data['upload_data'])){
+				echo "Paper is uploaded";
+			}
+			
+			$this->load->view('authors/dashboard',$data);
+		}
+		else
+		{
+		$error = array('error' => $this->upload->display_errors());
+			$this->load->view('authors/dashboard', $error);
+		    print_r($error);
+		}
+	}
+
 	public function logout(){
 		$this->session->unset_userdata('author_id');
 		$this->load->view('authors/login');

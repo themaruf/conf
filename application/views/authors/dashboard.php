@@ -79,6 +79,11 @@ $this->load->view("partial/header");
         </div>
         <!-- /.col -->
         <div class="col-md-9">
+          <?php echo $error;?> 
+          <?php echo form_open_multipart('authors/do_upload');?>
+          <?php echo "<input type='file' name='userfile' size='20' />"; ?>
+          <?php echo "<input type='submit' name='submit' value='upload' /> ";?>
+          <?php echo "</form>"?>
 
           <div class="box">
             <div class="box-header">
