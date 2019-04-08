@@ -12,6 +12,7 @@ class Authors extends CI_Controller {
 	{
 		if($this->session->userdata('author_id')) {
 			$data['author_info'] = $this->Author->get_author($this->session->userdata('author_id'));
+			$data['papers'] = $this->Author->get_all_papers($this->session->userdata('author_id'));
 			$this->load->view('authors/dashboard',$data);
 		}
 		else{
@@ -27,14 +28,18 @@ class Authors extends CI_Controller {
 
 	public function login()
 	{
+		//if already logged in
 		if($this->session->userdata('author_id')) {
-			$this->load->view('authors/dashboard');
+			$data['author_info'] = $this->Author->get_author($this->session->userdata('author_id'));
+			//$this->load->view('authors/dashboard',$data);
+			redirect('authors/index');
 		}
 		else{
 			$this->form_validation->set_error_delimiters('<div class="error">', '</div>');
 			$this->form_validation->set_rules('email', 'email', 'trim|required|valid_email');
 	        $this->form_validation->set_rules('password', 'password', 'trim|required');
 
+	        //failed login
 	        if ($this->form_validation->run() == FALSE)
 	        {
 	            $this->load->view('authors/login');
@@ -49,12 +54,14 @@ class Authors extends CI_Controller {
 					$data['message'] = "Invalid email or password";
 					$this->load->view('authors/login', $data);
 				}
+				//successful login
 				else
 				{
 					if($this->session->userdata('author_id')) {
 						$data['author_info'] = $this->Author->get_author($this->session->userdata('author_id'));
 					}
-					$this->load->view('authors/dashboard', $data);
+					//$this->load->view('authors/dashboard', $data);
+					redirect('authors/index');
 				}
 	        }
     	}
@@ -99,22 +106,41 @@ class Authors extends CI_Controller {
         }
 	}
 
+	public function logout(){
+		$this->session->unset_userdata('author_id');
+		redirect('authors/login');
+	}
+
+	public function ajax_edit($id){
+		$data = $this->Author->get_paper_by_id($id);
+    	echo json_encode($data);
+	}
+
+	public function paper_delete($id){
+	    $query = $this->Author->delete_by_id($id);
+	    if($query)
+	      {
+	        echo json_encode(array("result" => TRUE));
+	      }
+	      else
+	      {
+	        echo json_encode(array("result" => FALSE));
+	      }
+	}
 
 	public function do_upload(){
 		$config = array(
 		'upload_path' => "./uploads/",
 		'allowed_types' => "pdf",
 		'overwrite' => TRUE,
-		'max_size' => "8048000", // Can be set to particular file size , here it is 8 MB
-		'max_height' => "768",
-		'max_width' => "1024"
+		'max_size' => "8048000" // Can be set to particular file size , here it is 8 MB
 		);
 
 		//echo var_dump($config['upload_path']);
 
 		//$this->load->library('upload', $config);
 		$this->upload->initialize($config);
-		if($this->upload->do_upload())
+		if($this->upload->do_upload('paper_file'))
 		{
 			$data = array('upload_data' => $this->upload->data());
 			//print_r($data);
@@ -129,12 +155,78 @@ class Authors extends CI_Controller {
 		{
 		$error = array('error' => $this->upload->display_errors());
 			$this->load->view('authors/dashboard', $error);
-		    print_r($error);
+		    //print_r($error);
 		}
 	}
 
-	public function logout(){
-		$this->session->unset_userdata('author_id');
-		$this->load->view('authors/login');
+	public function paper_add(){
+	  date_default_timezone_set('Asia/Dhaka');
+      $date = date('Y-m-d');
+      $timestamp = date('Y-m-d G:i:s');
+      $unique_id = $this->session->userdata('author_id').time().$this->session->userdata('author_id');
+
+
+		$config = array(
+		'upload_path' => "./uploads/",
+		'allowed_types' => "pdf",
+		'overwrite' => FALSE,
+		'max_size' => "8048000" // Can be set to particular file size , here it is 8 MB
+		);
+
+		//echo var_dump($config['upload_path']);
+		$this->load->library('upload', $config);
+		$this->upload->initialize($config);
+
+		if($this->upload->do_upload('paper_file'))
+		{
+			$data = array('upload_data' => $this->upload->data());
+			//print_r($data);
+		}
+
+      $paper_data = array(
+      	  'paper_id' => $unique_id,
+          'paper_name' => $this->input->post('paper_title'),
+          'paper_keywords' => $this->input->post('keywords'),
+          'file_url' => $data['upload_data']['file_name'],
+          'added_time' => $timestamp,
+          'abstract' => $this->input->post('abstract'),
+          'status' => 1,
+          'deleted' => 0,
+        );
+      $paper_author_data = array(
+    	'author_id' => $this->session->userdata('author_id'),
+    	'paper_id' => $unique_id,
+      );
+
+      $insert = $this->Author->add_paper($paper_data,$paper_author_data);
+      //successfull insert
+      if($insert)
+      {
+        echo json_encode(array("result" => TRUE));
+      }
+      else
+      {
+        echo json_encode(array("result" => FALSE));
+      }
+	}
+
+	public function paper_update(){
+		//todo
+	}
+
+	public function ajax_search_author($author_id){
+		$author = $this->Author->get_author($author_id);
+		print_r($author);
+	}
+
+	public function suggest_author(){
+		$suggestions = $this->Author->get_search_suggestions_author($this->input->post_get('term'));
+
+		echo json_encode($suggestions);
+	}
+
+	//test function
+	public function addpaper(){
+		$this->load->view('authors/addpaper');
 	}
 }

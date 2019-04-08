@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<base href="<?php echo base_url();?>" />
-	<title></title>
+	<title>Conf</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -13,8 +13,14 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="<?php echo base_url();?>adminlte/bower_components/font-awesome/css/font-awesome.min.css">
   <!-- Ionicons -->
+  <link rel="stylesheet" href="<?php echo base_url();?>css/bootstrap-tagsinput.css">
+  
+  <link rel="stylesheet" href="<?php echo base_url();?>css/selectize.bootstrap3.css">
+  <!-- Ionicons -->
   <link rel="stylesheet" href="<?php echo base_url();?>adminlte/bower_components/Ionicons/css/ionicons.min.css">
    <!-- DataTables -->
+     <link href="<?php echo base_url();?>datatables/css/dataTables.bootstrap.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
   <link rel="stylesheet" href="<?php echo base_url();?>adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="<?php echo base_url();?>adminlte/dist/css/AdminLTE.min.css">
@@ -33,6 +39,7 @@
   <link rel="stylesheet" href="<?php echo base_url();?>adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
 
   <link rel="stylesheet" href="<?php echo base_url();?>adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+
   <link rel="stylesheet" href="<?php echo base_url();?>css/styles.css">
   <link rel="stylesheet" href="<?php echo base_url();?>css/login.css">
 
@@ -55,10 +62,15 @@
 </script>
 <!-- Bootstrap 3.3.7 -->
 <script src="<?php echo base_url();?>adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-
+  <script src="<?php echo base_url('datatables/js/jquery.dataTables.min.js')?>"></script>
+  <script src="<?php echo base_url('datatables/js/dataTables.bootstrap.js')?>"></script>
 <!-- DataTables -->
 <script src="<?php echo base_url();?>adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="<?php echo base_url();?>adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="<?php echo base_url();?>js/bootstrap-tagsinput.js"></script>
+<script src="<?php echo base_url();?>js/selectize.min.js"></script>
+<!-- notify js -->
+  <script src="<?php echo base_url('js/notify.min.js')?>"></script>
 <!-- Morris.js charts -->
 <script src="<?php echo base_url();?>adminlte/bower_components/raphael/raphael.min.js"></script>
 <script src="<?php echo base_url();?>adminlte/bower_components/morris.js/morris.min.js"></script>

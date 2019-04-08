@@ -79,62 +79,48 @@ $this->load->view("partial/header");
         </div>
         <!-- /.col -->
         <div class="col-md-9">
-          <?php echo $error;?> 
+<!--           <?php echo $error;?> 
           <?php echo form_open_multipart('authors/do_upload');?>
           <?php echo "<input type='file' name='userfile' size='20' />"; ?>
           <?php echo "<input type='submit' name='submit' value='upload' /> ";?>
-          <?php echo "</form>"?>
+          <?php echo "</form>"?> -->
+  <div>
+    <button class="btn btn-success" onclick="add_paper()"><i class="glyphicon glyphicon-plus"></i> Add Paper</button>
+    <br/>
+    <br/>
+    <table id="table_id" class="table table-striped table-bordered table-responsive">
+      <thead>
+        <tr>
+            <th>Paper ID</th>
+            <th>Title</th>
+            <th>Keywords</th>
+            <th>Abstract</th>
+            <th>Status</th>
+          <th style="width:80px;">Action
+          </p></th>
+        </tr>
+      </thead>
+      <tbody>
 
-          <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">Papers</h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              <table id="example1" class="table table-bordered table-striped">
-                <thead>
-                <tr>
-                  <th>Paper ID</th>
-                  <th>Title</th>
-                  <th>Keywords</th>
-                  <th>Abstract</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>Test Title</td>
-                  <td>ios android mobile</td>
-                  <td>lorem ipsum...</td>
-                  <td>On Review</td>
-                  <td><a href="#" class="modal-dlg" data-btn-submit="Submit" title="Edit"><span class="glyphicon glyphicon-edit"></span></a>  <a href="#" class="modal-dlg" title="Details"><span class="glyphicon glyphicon-list-alt"></span></a>  <a href="#" class="modal-dlg" data-btn-submit="Submit" title="Delete"><span class="glyphicon glyphicon-trash"></span></a></td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Test paper</td>
-                  <td>iot machine learning</td>
-                  <td>lorem ipsum...</td>
-                  <td>Reviewed</td>
-                  <td><a href="#" class="modal-dlg" data-btn-submit="Submit" title="Edit"><span class="glyphicon glyphicon-edit"></span></a>  <a href="#" class="modal-dlg" title="Details"><span class="glyphicon glyphicon-list-alt"></span></a>  <a href="#" class="modal-dlg" data-btn-submit="Submit" title="Delete"><span class="glyphicon glyphicon-trash"></span></a></td>
-                </tr>
-                </tbody>
-                <tfoot>
-                <tr>
-                  <th>Paper ID</th>
-                  <th>Title</th>
-                  <th>Keywords</th>
-                  <th>Abstract</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-                </tfoot>
-              </table>
-            </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
+        <?php foreach($papers as $paper){?>
+             <tr>
+                 <td><?php echo $paper->paper_id;?></td>
+                 <td><?php echo $paper->paper_name;?></td>
+                 <td><?php echo $paper->paper_keywords;?></td>
+                 <td><?php echo $paper->abstract;?></td>
+                 <td><?php echo $paper->status;?></td>
+                <!-- <td><?php echo date("d-M-Y",strtotime($paper->created_date));?></td> -->
+                <td>
+                  <button class="btn btn-warning" onclick="edit_paper(<?php echo $paper->paper_id;?>)"><i class="glyphicon glyphicon-edit"></i></button>
+                  <button class="btn btn-danger" onclick="delete_paper(<?php echo $paper->paper_id;?>)"><i class="glyphicon glyphicon-trash"></i></button>
+
+                </td>
+              </tr>
+             <?php }?>
+      </tbody>
+    </table>
+    </div>
+
         </div>
         <!-- /.col -->
       </div>
@@ -143,3 +129,302 @@ $this->load->view("partial/header");
     </section>
     <!-- /.content -->
 
+<script type="text/javascript">
+  $(document).ready( function () {
+      $('#table_id').dataTable({
+       "columnDefs": [
+          { "targets": [2,4],
+           "orderable": false }
+        ],
+
+        "columnDefs": [
+          { "targets": [3,4],
+           "searchable": false }
+        ],
+        "pageLength": 25
+    });    
+});
+    var save_method; //for save method string
+    var table;
+
+    function add_paper()
+    {
+      save_method = 'add';
+      $('#form')[0].reset(); // reset form on modals
+      $('#modal_form').modal('show'); // show bootstrap modal
+    //$('.modal-title').text('Add Paper'); // Set Title to Bootstrap modal title
+    }
+
+    function edit_paper(id)
+    {
+      save_method = 'update';
+      $('#form')[0].reset(); // reset form on modals
+
+      //Ajax Load data from ajax
+      $.ajax({
+        url : "<?php echo site_url('authors/ajax_edit/')?>/" + id,
+        type: "GET",
+        dataType: "JSON",
+        success: function(data)
+        {
+            console.log(data);
+            $('[name="paper_id"]').val(data.paper_id);
+            $('[name="paper_title"]').val(data.paper_name);
+            $('[name="keywords"]').tagsinput('add',data.paper_keywords);
+            $('[name="abstract"]').val(data.abstract);
+
+
+            $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
+            $('.modal-title').text('Edit Paper'); // Set title to Bootstrap modal title
+
+        },
+        error: function (jqXHR, textStatus, errorThrown)
+        {
+            alert('Error getting data from ajax');
+        }
+    });
+    }
+
+
+
+    function save()
+    {
+      var url;
+      if(save_method == 'add')
+      {
+          url = "<?php echo site_url('authors/paper_add')?>";
+      }
+      else
+      {
+          url = "<?php echo site_url('authors/paper_update')?>";
+      }
+
+      var form_data = new FormData($('#form')[0]);
+
+      // Display the key/value pairs
+      for (var pair of form_data.entries()) {
+          console.log(pair[0]+ ', ' + pair[1]); 
+      }
+
+       //ajax adding data to database
+          $.ajax({
+            url : url,
+            type: "POST",
+            enctype: "multipart/form-data",
+            contentType: false,
+            cache: false,
+            processData:false,
+            data: form_data,
+            dataType: "JSON",
+            success: function(data)
+            {
+              //console.log(data.result);
+               //if success close modal and reload ajax table
+              $('#modal_form').modal('hide');
+              if(data.result)
+              {
+                $.notify("Paper is Created/Updated Successfully!", {
+                  className:'success',
+                  clickToHide: false,
+                  autoHide: false,
+                  globalPosition: 'bottom center'
+                });
+              }
+              else
+              {
+                $.notify("Paper could not be Created/Updated!", {
+                  className:'error',
+                  clickToHide: false,
+                  autoHide: false,
+                  globalPosition: 'bottom center'
+                });
+              }
+
+              setTimeout(function(){
+                location.reload();// for reload a page
+              }, 1000);
+            },
+            error: function (jqXHR, textStatus, errorThrown)
+            {
+                alert('Error adding / update data');
+            }
+        });
+    }
+
+    function delete_paper(id)
+    {
+      if(confirm('Are you sure delete this data?'))
+      {
+        // ajax delete data from database
+          $.ajax({
+            url : "<?php echo site_url('authors/paper_delete')?>/"+id,
+            type: "POST",
+            dataType: "JSON",
+            success: function(data)
+            {    
+              if(data.result)
+              {
+                $.notify("Paper is Deleted Successfully!", {
+                  className:'success',
+                  clickToHide: false,
+                  autoHide: false,
+                  globalPosition: 'bottom center'
+                });
+              }
+              else
+              {
+                $.notify("Paper Could not be Deleted!!!", {
+                  className:'error',
+                  clickToHide: false,
+                  autoHide: false,
+                  globalPosition: 'bottom center'
+                });
+              }
+              
+              setTimeout(function(){
+                location.reload();// for reload a page
+              }, 1000);
+            },
+            error: function (jqXHR, textStatus, errorThrown)
+            {
+                alert('Error deleting data');
+            }
+        });
+
+      }
+    }
+
+  </script>
+
+  <!-- Bootstrap modal -->
+  <div class="modal fade" id="modal_form" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title">Paper Form</h3>
+      </div>
+      <div class="modal-body form">
+        <form action="#" id="form" class="form-horizontal" enctype="multipart/form-data">
+          <div class="form-body">
+              <div class="form-group">
+              <label class="control-label col-md-3">Paper Title</label>
+              <div class="col-md-9">
+                <input name="paper_title" placeholder="Paper Title" class="form-control" type="text">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-md-3">Keywords</label>
+              <div class="col-md-9">
+                <input name="keywords" placeholder="Keywords" data-role="tagsinput" class="form-control" type="text">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-md-3">Abstract</label>
+              <div class="col-md-9">
+              <textarea name="abstract" placeholder="Abstract" class="form-control" rows="12" cols="30"></textarea>
+              </div>
+            </div>
+
+            <div>
+              <input type="file" name="paper_file" id="paper_file">
+            </div>
+<!--             <div class="form-group">
+              <label class="control-label col-md-3">Co Author</label>
+              <div class="col-md-9">
+                <input name="co_author" id="co_author" placeholder="Co Author" class="form-control" type="text">
+              </div>
+            </div> -->
+<!--             <div class="container1">
+              <button class="add_form_field">Add New &nbsp; <span style="font-size:16px; font-weight:bold;">+ </span></button>
+              <div><input class="co_author" type="text" name="co_author[]"></div>
+            </div> -->
+            <!-- maruf -->
+<!--             <div class="form-group">
+              <label class="control-label col-md-3">Created Date</label>
+              <div class="col-md-9">
+                <input class="form-control form-control-lg" type="text" id="created_date" name="created_date" />
+              </div>
+            </div> -->
+            <!-- maruf -->
+
+          </div>
+        </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+  <!-- End Bootstrap modal -->
+
+
+<?php $this->load->view("partial/footer"); ?>
+
+
+<!-- maruf -->
+<script type="text/javascript">
+  $(document).ready( function () {
+    $('input[name="created_date"]').daterangepicker({
+        autoClose: true,
+        singleDatePicker: true,
+        "drops": "up",
+        locale: {
+            format: 'YYYY-MM-DD'
+        }
+    });
+
+ $(".co_author").autocomplete({
+    source: '<?php echo site_url("authors/suggest_author"); ?>',
+    minChars:0,
+    autoFocus: false,
+    delay:10,
+    appendTo: ".modal-content",
+    select: function(e, ui) {
+      if ($("#author_" + ui.item.value).length == 1)
+      {
+        $("#author_" + ui.item.value).val(parseFloat( $("#author_" + ui.item.value).val()) + 1);
+      }
+      else
+      {
+        $("#authors_list").append("<tr><td><a href='#' onclick='return delete_author(this);'><span class='glyphicon glyphicon-trash'></span></a></td><td>" + ui.item.label + "</td><td><input class='quantity form-control input-sm' id='author_" + ui.item.value + "' type='text' name=author[" + ui.item.value + "] value='1'/></td></tr>");
+      }
+      $("#co_author").val("");
+      return false;
+    }
+  });
+
+ function delete_author(link)
+{
+  preventDefault();
+  $(link).parent().parent().remove();
+  return false;
+}
+
+
+    var max_fields  = 3;
+    var wrapper = $(".container1");
+    var add_button = $(".add_form_field");
+  
+    var x = 1;
+    $(add_button).click(function(e){
+        e.preventDefault();
+        if(x < max_fields){
+            x++;
+            $(wrapper).append('<div><input type="text" name="co_author[]"/><a href="#" class="delete">Delete</a></div>'); //add input box
+        }
+  else
+  {
+  alert('You Reached the limits')
+  }
+    });
+  
+    $(wrapper).on("click",".delete", function(e){
+        e.preventDefault(); $(this).parent('div').remove(); x--;
+    })
+});
+
+</script>
+<!-- maruf -->

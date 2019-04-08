@@ -55,6 +55,29 @@ class Author extends CI_Model
             return $query->row();
         }
 
+    public function get_search_suggestions_author($search, $limit = 10)
+    {
+        $suggestions = array();
+
+        $this->db->select('author_id, first_name, last_name');
+        $this->db->from('authors');
+        $this->db->where('deleted', 0);
+        $this->db->like('author_id', $search);
+        $this->db->or_like('first_name', $search);
+        $this->db->or_like('last_name', $search);
+        $this->db->order_by('author_id', 'asc');
+        foreach($this->db->get()->result() as $row)
+        {
+            $suggestions[] = array('value' => $row->author_id, 'label' => $row->author_id."-".$row->first_name." ".$row->last_name);
+        }
+        //only return $limit suggestions
+        if(count($suggestions > $limit))
+        {
+            $suggestions = array_slice($suggestions, 0,$limit);
+        }
+        return $suggestions;
+    }
+
         public function upload_file($filedata){
             $paper_data = array(
                 'paper_name' => $filedata['file_name'],
@@ -62,6 +85,52 @@ class Author extends CI_Model
             );
             return $this->db->insert('papers', $paper_data);  
         }
+
+        public function get_author_data($author_id){
+
+        }
+
+        public function get_all_papers($author_id)
+        {
+            $this->db->from('papers');
+            $this->db->where('deleted',0);
+            $query=$this->db->get();
+            return $query->result();
+        }
+
+        public function get_paper_by_id($paper_id){
+            $this->db->from('papers');
+            $this->db->where('paper_id',$paper_id);
+            $query = $this->db->get();
+            return $query->row();
+        }
+
+        public function add_paper($paper_data,$paper_author_data){
+            $this->db->trans_start();
+            $this->db->insert('papers', $paper_data);
+            $this->db->insert('paper_author',$paper_author_data);
+            $this->db->trans_complete();
+
+            if ($this->db->trans_status() === FALSE){
+                return false;
+            }
+            else{
+                return true;
+            }
+        }
+
+      public function delete_by_id($paper_id)
+      {
+        $deleted = array('deleted' => 1);  
+        $this->db->where('paper_id', $paper_id);
+        $this->db->update('papers',$deleted);
+
+        if($this->db->affected_rows() > 0){
+          return true; 
+        }else{
+          return false; 
+        }
+      }
         
 
 }
