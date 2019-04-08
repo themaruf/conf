@@ -172,7 +172,7 @@ $this->load->view("partial/header");
             $('[name="paper_title"]').val(data.paper_name);
             $('[name="keywords"]').tagsinput('add',data.paper_keywords);
             $('[name="abstract"]').val(data.abstract);
-
+            $('#file_link').html(data.file_url).attr("href", "<?php echo site_url('authors/showPaper')?>/" + data.file_url);
 
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
             $('.modal-title').text('Edit Paper'); // Set title to Bootstrap modal title
@@ -328,6 +328,7 @@ $this->load->view("partial/header");
 
             <div>
               <input type="file" name="paper_file" id="paper_file">
+              <a id="file_link" target="_blank"></a>
             </div>
 <!--             <div class="form-group">
               <label class="control-label col-md-3">Co Author</label>
@@ -376,25 +377,25 @@ $this->load->view("partial/header");
         }
     });
 
- $(".co_author").autocomplete({
-    source: '<?php echo site_url("authors/suggest_author"); ?>',
-    minChars:0,
-    autoFocus: false,
-    delay:10,
-    appendTo: ".modal-content",
-    select: function(e, ui) {
-      if ($("#author_" + ui.item.value).length == 1)
-      {
-        $("#author_" + ui.item.value).val(parseFloat( $("#author_" + ui.item.value).val()) + 1);
-      }
-      else
-      {
-        $("#authors_list").append("<tr><td><a href='#' onclick='return delete_author(this);'><span class='glyphicon glyphicon-trash'></span></a></td><td>" + ui.item.label + "</td><td><input class='quantity form-control input-sm' id='author_" + ui.item.value + "' type='text' name=author[" + ui.item.value + "] value='1'/></td></tr>");
-      }
-      $("#co_author").val("");
-      return false;
-    }
-  });
+ // $(".co_author").autocomplete({
+ //    source: '<?php echo site_url("authors/suggest_author"); ?>',
+ //    minChars:0,
+ //    autoFocus: false,
+ //    delay:10,
+ //    appendTo: ".modal-content",
+ //    select: function(e, ui) {
+ //      if ($("#author_" + ui.item.value).length == 1)
+ //      {
+ //        $("#author_" + ui.item.value).val(parseFloat( $("#author_" + ui.item.value).val()) + 1);
+ //      }
+ //      else
+ //      {
+ //        $("#authors_list").append("<tr><td><a href='#' onclick='return delete_author(this);'><span class='glyphicon glyphicon-trash'></span></a></td><td>" + ui.item.label + "</td><td><input class='quantity form-control input-sm' id='author_" + ui.item.value + "' type='text' name=author[" + ui.item.value + "] value='1'/></td></tr>");
+ //      }
+ //      $("#co_author").val("");
+ //      return false;
+ //    }
+ //  });
 
  function delete_author(link)
 {

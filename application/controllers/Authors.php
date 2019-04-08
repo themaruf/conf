@@ -128,37 +128,6 @@ class Authors extends CI_Controller {
 	      }
 	}
 
-	public function do_upload(){
-		$config = array(
-		'upload_path' => "./uploads/",
-		'allowed_types' => "pdf",
-		'overwrite' => TRUE,
-		'max_size' => "8048000" // Can be set to particular file size , here it is 8 MB
-		);
-
-		//echo var_dump($config['upload_path']);
-
-		//$this->load->library('upload', $config);
-		$this->upload->initialize($config);
-		if($this->upload->do_upload('paper_file'))
-		{
-			$data = array('upload_data' => $this->upload->data());
-			//print_r($data);
-
-			if($this->Author->upload_file($data['upload_data'])){
-				echo "Paper is uploaded";
-			}
-			
-			$this->load->view('authors/dashboard',$data);
-		}
-		else
-		{
-		$error = array('error' => $this->upload->display_errors());
-			$this->load->view('authors/dashboard', $error);
-		    //print_r($error);
-		}
-	}
-
 	public function paper_add(){
 	  date_default_timezone_set('Asia/Dhaka');
       $date = date('Y-m-d');
@@ -185,11 +154,11 @@ class Authors extends CI_Controller {
 
       $paper_data = array(
       	  'paper_id' => $unique_id,
-          'paper_name' => $this->input->post('paper_title'),
-          'paper_keywords' => $this->input->post('keywords'),
+      	  'paper_name' => $this->input->post('paper_title') == NULL ? '' : $this->input->post('paper_title'),
+          'paper_keywords' => $this->input->post('keywords') == NULL ? '' : $this->input->post('keywords'),
           'file_url' => $data['upload_data']['file_name'],
           'added_time' => $timestamp,
-          'abstract' => $this->input->post('abstract'),
+          'abstract' => $this->input->post('abstract') == NULL ? '' : $this->input->post('abstract'),
           'status' => 1,
           'deleted' => 0,
         );
@@ -228,5 +197,10 @@ class Authors extends CI_Controller {
 	//test function
 	public function addpaper(){
 		$this->load->view('authors/addpaper');
+	}
+
+	public function showPaper($file_name){
+		$data['file_name'] = $file_name;
+		$this->load->view('authors/showpaper',$data);
 	}
 }
