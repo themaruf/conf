@@ -13,6 +13,7 @@ class Authors extends CI_Controller {
 		if($this->session->userdata('author_id')) {
 			$data['author_info'] = $this->Author->get_author($this->session->userdata('author_id'));
 			$data['papers'] = $this->Author->get_all_papers($this->session->userdata('author_id'));
+			$data['query']  = $this->Author->get_last_query();
 			$this->load->view('authors/dashboard',$data);
 		}
 		else{
@@ -111,13 +112,13 @@ class Authors extends CI_Controller {
 		redirect('authors/login');
 	}
 
-	public function ajax_edit($id){
-		$data = $this->Author->get_paper_by_id($id);
+	public function ajax_edit($paper_id){
+		$data = $this->Author->get_paper_by_id($paper_id);
     	echo json_encode($data);
 	}
 
-	public function paper_delete($id){
-	    $query = $this->Author->delete_by_id($id);
+	public function paper_delete($paper_id){
+	    $query = $this->Author->delete_by_id($paper_id);
 	    if($query)
 	      {
 	        echo json_encode(array("result" => TRUE));

@@ -79,14 +79,11 @@ $this->load->view("partial/header");
         </div>
         <!-- /.col -->
         <div class="col-md-9">
-<!--           <?php echo $error;?> 
-          <?php echo form_open_multipart('authors/do_upload');?>
-          <?php echo "<input type='file' name='userfile' size='20' />"; ?>
-          <?php echo "<input type='submit' name='submit' value='upload' /> ";?>
-          <?php echo "</form>"?> -->
+
   <div>
     <button class="btn btn-success" onclick="add_paper()"><i class="glyphicon glyphicon-plus"></i> Add Paper</button>
     <br/>
+    <?php var_dump($query);?>
     <br/>
     <table id="table_id" class="table table-striped table-bordered table-responsive">
       <thead>
@@ -170,6 +167,8 @@ $this->load->view("partial/header");
             console.log(data);
             $('[name="paper_id"]').val(data.paper_id);
             $('[name="paper_title"]').val(data.paper_name);
+            //clearing data
+            $('[name="keywords"]').tagsinput('removeAll');
             $('[name="keywords"]').tagsinput('add',data.paper_keywords);
             $('[name="abstract"]').val(data.abstract);
             $('#file_link').html(data.file_url).attr("href", "<?php echo site_url('authors/showPaper')?>/" + data.file_url);

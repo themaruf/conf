@@ -93,9 +93,15 @@ class Author extends CI_Model
         public function get_all_papers($author_id)
         {
             $this->db->from('papers');
+            $this->db->join('paper_author','paper_author.paper_id = papers.paper_id');
+            $this->db->where('paper_author.author_id',$author_id);
             $this->db->where('deleted',0);
             $query=$this->db->get();
             return $query->result();
+        }
+
+        public function get_last_query(){
+            return $this->db->last_query();
         }
 
         public function get_paper_by_id($paper_id){
@@ -121,14 +127,20 @@ class Author extends CI_Model
 
       public function delete_by_id($paper_id)
       {
+        $this->db->trans_start();
         $deleted = array('deleted' => 1);  
         $this->db->where('paper_id', $paper_id);
         $this->db->update('papers',$deleted);
 
-        if($this->db->affected_rows() > 0){
-          return true; 
-        }else{
-          return false; 
+        $this->db->delete('paper_author', array('paper_id' => $paper_id));
+
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE){
+            return false;
+        }
+        else{
+            return true;
         }
       }
         
