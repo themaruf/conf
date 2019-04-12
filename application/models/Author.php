@@ -111,10 +111,21 @@ class Author extends CI_Model
             return $query->row();
         }
 
-        public function add_paper($paper_data,$paper_author_data){
+        public function add_paper($paper_data,$paper_author_data,$names,$emails){
             $this->db->trans_start();
             $this->db->insert('papers', $paper_data);
             $this->db->insert('paper_author',$paper_author_data);
+            $insertId = $this->db->insert_id();
+
+            foreach ($emails as $key => $value) {
+                $co_author_data = array(
+                    'co_author_name'.$key => $names[$key],
+                    'co_author_email'.$key => $emails[$key],
+                );
+                $this->db->where('paper_author_id', $insertId);
+                $this->db->update('paper_author',$co_author_data);
+                if ($key == 3) { break; }
+            }
             $this->db->trans_complete();
 
             if ($this->db->trans_status() === FALSE){

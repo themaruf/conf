@@ -1,28 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view("partial/header");
+$this->load->view("partial/header_normal");
 ?>
-<!-- <div class="login-page">
-  <div class="form" id="login-form">
-	<div id="logo" align="center">
-		<a href="#" target="_blank">
-			<img width="136px" height="67px" src="<?php echo base_url();?>images/icon.png">
-		</a>
-	</div>
-	
-<?php echo validation_errors();?>
-      <div class="success">'
-            <?php if ( $message != null ) echo $message;?>
-      </div>
-<?php echo form_open('authors/login', array('id' => 'login-form')) ?>
-      <input type="text" name="email" value="<?php echo set_value('email'); ?>" placeholder="email"/>
-      <input type="password" name="password" value="<?php echo set_value('password'); ?>" placeholder="password"/>
-      <button>Login</button>
-      <p class="message">Not registered? <a href="<?php echo base_url();?>authors/signup">Create an account</a></p>
-<?php echo form_close(); ?>
-  </div>
-</div> -->
-
 	<div class="container-fluid">
 		<div class="agile_info">
 			<div class="w3l_form">
@@ -33,14 +13,14 @@ $this->load->view("partial/header");
 				</div>
 			</div>
 			<div class="w3_info">
-				<h2>Login to your Account</h2>
+				<h2>Author Login to your Account</h2>
 				<p>Enter your details to login.</p>
  <div class="login">
   <div class="form" id="login-form">
 	
 <?php echo validation_errors();?>
-      <div class="success">'
-            <!-- <?php if ( $message != null ) echo $message;?> -->
+      <div class="error">
+            <?php if ( $message != null ) echo $message;?>
       </div>
 <?php echo form_open('authors/login', array('id' => 'login-form')) ?>
 	<label>Email Address</label>
@@ -621,3 +601,5 @@ h5 {
 </style>
 
 <!-- SELECT * FROM `authors` JOIN users ON authors.user_id = users.user_id -->
+
+<?php $this->load->view("partial/footer");?>

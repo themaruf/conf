@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view("partial/header");
+$this->load->view("partial/header_normal");
 ?>
 <div class="jumbotron">
   <h1 class="display-4">This is about page</h1>

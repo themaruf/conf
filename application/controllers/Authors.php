@@ -8,6 +8,7 @@ class Authors extends CI_Controller {
         parent::__construct();
     }
 
+    //dashboard
 	public function index()
 	{
 		if($this->session->userdata('author_id')) {
@@ -17,9 +18,32 @@ class Authors extends CI_Controller {
 			$this->load->view('authors/dashboard',$data);
 		}
 		else{
-			$this->load->view('authors/login');
+			$data['message'] = "";
+			$this->load->view('authors/login',$data);
 		}
-		
+	}
+
+	public function papers(){
+		$data['papers'] = $this->Author->get_all_papers($this->session->userdata('author_id'));
+		$this->load->view('authors/papers',$data);
+	}
+
+	public function view($paper_id = -1){
+		if($paper_id > 0){
+			$data['paper_data'] = $this->Author->get_paper_by_id($paper_id);
+			$this->load->view('authors/paperform',$data);
+		}
+		else{
+			$data['paper_data'] = (object)[
+									  "paper_name" => "",
+									  "paper_keywords" => "",
+									  "abstract" => "",
+									  "file_url" => ""
+									];
+
+			$this->load->view('authors/paperform',$data);
+		}
+
 	}
 
 	public function signup()
@@ -43,7 +67,8 @@ class Authors extends CI_Controller {
 	        //failed login
 	        if ($this->form_validation->run() == FALSE)
 	        {
-	            $this->load->view('authors/login');
+	        	$data['message'] = "";
+	            $this->load->view('authors/login',$data);
 	        }
 	        else
 	        {
@@ -130,6 +155,12 @@ class Authors extends CI_Controller {
 	}
 
 	public function paper_add(){
+
+		$co_author_name_array = $this->input->post('name');
+		$co_author_email_array = $this->input->post('email');
+		print_r($co_author_name_array);
+		print_r($co_author_email_array);
+
 	  date_default_timezone_set('Asia/Dhaka');
       $date = date('Y-m-d');
       $timestamp = date('Y-m-d G:i:s');
@@ -140,7 +171,8 @@ class Authors extends CI_Controller {
 		'upload_path' => "./uploads/",
 		'allowed_types' => "pdf",
 		'overwrite' => FALSE,
-		'max_size' => "8048000" // Can be set to particular file size , here it is 8 MB
+		'max_size' => "8048000", // Can be set to particular file size , here it is 8 MB
+		'file_name' => $unique_id
 		);
 
 		//echo var_dump($config['upload_path']);
@@ -168,15 +200,18 @@ class Authors extends CI_Controller {
     	'paper_id' => $unique_id,
       );
 
-      $insert = $this->Author->add_paper($paper_data,$paper_author_data);
+
+      $insert = $this->Author->add_paper($paper_data,$paper_author_data,$co_author_name_array,$co_author_email_array);
       //successfull insert
       if($insert)
       {
         echo json_encode(array("result" => TRUE));
+        redirect('authors/papers');
       }
       else
       {
         echo json_encode(array("result" => FALSE));
+        redirect('authors/view');
       }
 	}
 
