@@ -115,15 +115,20 @@ class Admins extends CI_Controller {
         }
 	}
 
+	public function view($paper_id){
+		if($this->Admin->paper_exists($paper_id)){
+			$data['paper_data'] = $this->Admin->get_paper_by_id($paper_id);
+			$data['co_author_data'] = $this->Admin->get_co_author_by_id($paper_id);
+			$data['reviewers'] = $this->Admin->get_all_reviewers();
+			echo $this->Admin->get_last_query();
+			$this->load->view('admins/paperform',$data);
+		}
+	}
+
 	//touched
 	public function logout(){
 		$this->session->unset_userdata('admin_id');
 		redirect('admins/login');
-	}
-
-	public function ajax_edit($paper_id){
-		$data = $this->Admin->get_paper_by_id($paper_id);
-    	echo json_encode($data);
 	}
 
 	public function paper_delete($paper_id){

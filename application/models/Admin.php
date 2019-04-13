@@ -9,6 +9,15 @@ class Admin extends CI_Model
 
             return ($this->db->get()->num_rows() == 1);
         }
+
+        //touched
+        public function paper_exists($paper_id)
+        {
+            $this->db->from('papers');  
+            $this->db->where('paper_id', $paper_id);
+
+            return ($this->db->get()->num_rows() == 1);
+        }
         
         //touched
         public function signup_new_user($first_name, $last_name, $phone, $dob, $email, $password)
@@ -70,6 +79,21 @@ class Admin extends CI_Model
         $this->db->where('paper_id',$paper_id);
         $query = $this->db->get();
         return $query->row();
+    }
+
+    public function get_co_author_by_id($paper_id){
+        $this->db->select('co_author_name0,co_author_email0,co_author_name1,co_author_email1,co_author_name2,co_author_email2,co_author_name3,co_author_email3');
+        $this->db->from('paper_author');
+        $this->db->where('paper_id',$paper_id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+ 
+    public function get_all_reviewers(){
+        $this->db->select('reviewer_id, first_name, last_name, keywords, email');
+        $this->db->from('reviewers');
+        $query = $this->db->get();
+        return $query->result();
     }
 
     //touched
