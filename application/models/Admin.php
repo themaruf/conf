@@ -115,6 +115,14 @@ class Admin extends CI_Model
             return true;
         }
       }
+
+    public function send_invitation($invitation_id, $email){
+        $reviewer_invitation = array(
+            'reviewer_invitation_id' => $invitation_id,
+            'email' => $email
+        );
+        return $this->db->insert('reviewer_invitations', $reviewer_invitation);          
+    }
         
 
 }

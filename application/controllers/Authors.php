@@ -206,6 +206,27 @@ class Authors extends CI_Controller {
       if($insert)
       {
         echo json_encode(array("result" => TRUE));
+        //send mail to co authors
+        // Load PHPMailer library
+        $this->load->library('phpmailer_lib');
+        // PHPMailer object
+        $mail = $this->phpmailer_lib->load();
+        // Add a recipient
+        $mail->addAddress($email);
+        // Email subject
+        $mail->Subject = 'A Paper is submitted on ConfMag';  
+        // Email body content
+        $mailContent = "<h1>Your Paper is Submitted on ConfMag</h1>
+            <p>Register as a reviewer on ConfMag</p>
+            <a href=$reg_link target='_blank'>Register as a reviewer on ConfMag</a>";
+        $mail->Body = $mailContent;
+        // Send email
+        if(!$mail->send()){
+            echo 'Message could not be sent.';
+            echo 'Mailer Error: ' . $mail->ErrorInfo;
+        }else{
+            echo 'Message has been sent';
+        }
         redirect('authors/papers');
       }
       else

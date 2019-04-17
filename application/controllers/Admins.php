@@ -68,7 +68,7 @@ class Admins extends CI_Controller {
 				else
 				{
 					if($this->session->userdata('admin_id')) {
-						$data['admin_info'] = $this->Admin->login_admin($this->session->userdata('admin_id'));
+						$data['admin_info'] = $this->Admin->get_admin($this->session->userdata('admin_id'));
 					}
 					//$this->load->view('admins/dashboard', $data);
 					redirect('admins/index');
@@ -152,4 +152,55 @@ class Admins extends CI_Controller {
 		$data['paper_id'] = $paper_id;
 		$this->load->view('admins/show',$data);
 	}
+
+	public function invitation(){
+		date_default_timezone_set('Asia/Dhaka');
+        $unique_id = $this->session->userdata('admin_id').time().$this->session->userdata('admin_id');
+        $data['invitation_id'] = $unique_id;
+		$this->load->view('admins/invitation',$data);
+	}
+
+	private function setup_mail(){
+
+	}
+
+	public function send_invitation(){
+		$invitation_id = $this->input->post('invitation_id');
+		$email = $this->input->post('email');
+		$reg_link = base_url('reviewers/register/').$invitation_id;
+
+		// Load PHPMailer library
+        $this->load->library('phpmailer_lib');
+        // PHPMailer object
+        $mail = $this->phpmailer_lib->load();
+        // Add a recipient
+        $mail->addAddress($email);
+        // Email subject
+        $mail->Subject = 'Invitation on ConfMag';  
+        // Email body content
+        $mailContent = "<h1>Invitation on ConfMag</h1>
+            <p>Register as a reviewer on ConfMag</p>
+            <a href=$reg_link target='_blank'>Register as a reviewer on ConfMag</a>";
+        $mail->Body = $mailContent;
+        // Send email
+        if(!$mail->send()){
+            echo 'Message could not be sent.';
+            echo 'Mailer Error: ' . $mail->ErrorInfo;
+        }else{
+            echo 'Message has been sent';
+        }
+
+
+		$this->Admin->send_invitation($invitation_id, $email);
+
+	}
+
+	// public function sendmail(){
+	//     $from = "maruf01676@gmail.com";
+	//     $to = "hasan.m.maruf@gmail.com";
+	//     $subject = "Checking PHP mail";
+	//     $message = "PHP mail works just fine";
+	//     $headers = "From:" . $from;
+	//     echo( mail($to,$subject,$message, $headers));
+	// }
 }

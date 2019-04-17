@@ -23,7 +23,8 @@
                     <ul class="dropdown-menu">
                         <li <?php if($this->uri->segment(1)=="authors" && $this->uri->segment(2)=="login"){echo 'class="active"';}?> ><a href="<?php echo base_url('authors/login');?>">Author</a></li>
                         <li <?php if($this->uri->segment(1)=="admins" && $this->uri->segment(2)=="login"){echo 'class="active"';}?> ><a href="<?php echo base_url('admins/login');?>">Admin</a></li>
-                        <li><a href="#">Reviewer</a></li>
+                        <li <?php if($this->uri->segment(1)=="reviewers" && $this->uri->segment(2)=="login"){echo 'class="active"';}?> ><a href="<?php echo base_url('reviewers/login');?>">Reviewer</a></li>
+                        <li><a href="#"></a></li>
                     </ul>
                 </li>
             </ul>
