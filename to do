@@ -1,0 +1,13 @@
+Author part:
+	-paper add send mail to author and co authors
+	-add a view paper page
+
+
+Admin part:
+	-add a view paper page (same as author)
+	-http://localhost/conf/public/admins/view/115546290981 choose reviewer option add
+	-add some option is admin signup
+
+
+Reviewer part: 
+	DONE-add a invalid reg page http://localhost/conf/public/reviewers/register/******* 

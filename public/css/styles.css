@@ -6,6 +6,25 @@
 	color: green;
 }
 
-#table_id_wrapper{
-	
+/*bootstrap tags input*/
+  .label {
+      display: inline;
+      padding: .2em .6em .3em;
+      font-size: 75%;
+      font-weight: 700;
+      line-height: 1;
+      color: #fff;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: baseline;
+      border-radius: .25em;
+  }
+
+  .label-info {
+    background-color: #5bc0de;
+  }
+
+.box-primary{
+  border: 2px solid #E5E5E5;
+  padding: 5px;
 }

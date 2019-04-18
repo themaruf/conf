@@ -3,12 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view("partial/header");
 $this->load->view("partial/header_normal");
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Home</title>
-</head>
-<body>
+
 	<center>
 	<div>
           <h1 class="jumbotron-heading">CONFMAG</h1>
@@ -23,5 +18,5 @@ $this->load->view("partial/header_normal");
 
     </div>
     </center>
-</body>
-</html>
+
+<?php $this->load->view("partial/footer"); ?>

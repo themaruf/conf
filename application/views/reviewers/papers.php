@@ -6,7 +6,7 @@ $this->load->view("partial/header_reviewer");
 
 <div class="col-md-12">
   <div>
-    <?php var_dump($query);?>
+    <?php //var_dump($query);?>
     <br/>
     <table id="table_id" class="table table-striped table-bordered table-responsive">
       <thead>
@@ -29,10 +29,10 @@ $this->load->view("partial/header_reviewer");
                  <td><?php echo $paper->paper_keywords;?></td>
                  <td><?php echo $paper->abstract;?></td>
                  <td><?php echo $paper->status;?></td>
+                <!-- <td><?php echo date("d-M-Y",strtotime($paper->created_date));?></td> -->
                 <td>
-                  <a class="btn btn-warning" href="<?php echo base_url('admins/show/');echo $paper->paper_id;?>" ><i class="fa fa-eye"></i></a>
-                  <a class="btn btn-warning" href="<?php echo base_url('admins/view/');echo $paper->paper_id;?>" ><i class="glyphicon glyphicon-edit"></i></a>
-                  <a class="btn btn-danger" onclick="delete_paper(<?php echo $paper->paper_id;?>)"><i class="glyphicon glyphicon-trash"></i></a>
+                  <a class="btn btn-warning" href="<?php echo base_url('reviewers/view/');echo $paper->paper_id;?>" ><i class="fa fa-edit"></i></a>
+                  <a class="btn btn-danger" onclick="delete_paper(<?php echo $paper->paper_id;?>)"><i class="fa fa-trash"></i></a>
 
                 </td>
               </tr>
@@ -79,13 +79,13 @@ $this->load->view("partial/header_reviewer");
 
 });
 
-function delete_paper(id)
+    function delete_paper(id)
     {
       if(confirm('Are you sure delete this data?'))
       {
         // ajax delete data from database
           $.ajax({
-            url : "<?php echo site_url('admins/paper_delete')?>/"+id,
+            url : "<?php echo site_url('reviewers/paper_delete')?>/"+id,
             type: "POST",
             dataType: "JSON",
             success: function(data)

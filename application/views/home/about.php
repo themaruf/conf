@@ -9,3 +9,5 @@ $this->load->view("partial/header_normal");
   <hr class="my-4">
 
 </div>
+
+<?php $this->load->view("partial/footer"); ?>

@@ -31,8 +31,8 @@ $this->load->view("partial/header_admin");
                  <td><?php echo $paper->status;?></td>
                 <td>
                   <a class="btn btn-warning" href="<?php echo base_url('admins/show/');echo $paper->paper_id;?>" ><i class="fa fa-eye"></i></a>
-                  <a class="btn btn-warning" href="<?php echo base_url('admins/view/');echo $paper->paper_id;?>" ><i class="glyphicon glyphicon-edit"></i></a>
-                  <a class="btn btn-danger" onclick="delete_paper(<?php echo $paper->paper_id;?>)"><i class="glyphicon glyphicon-trash"></i></a>
+                  <a class="btn btn-warning" href="<?php echo base_url('admins/view/');echo $paper->paper_id;?>" ><i class="fa fa-edit"></i></a>
+                  <a class="btn btn-danger" onclick="delete_paper(<?php echo $paper->paper_id;?>)"><i class="fa fa-trash"></i></a>
 
                 </td>
               </tr>

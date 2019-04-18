@@ -6,8 +6,6 @@ $this->load->view("partial/header_author");
 
 <div class="col-md-12">
   <div>
-    <a href="<?php echo base_url('authors/view');?>" class="btn btn-success" onclick="add_paper()"><i class="glyphicon glyphicon-plus"></i> Add Paper</a>
-    <br/>
     <?php //var_dump($query);?>
     <br/>
     <table id="table_id" class="table table-striped table-bordered table-responsive">
@@ -33,8 +31,8 @@ $this->load->view("partial/header_author");
                  <td><?php echo $paper->status;?></td>
                 <!-- <td><?php echo date("d-M-Y",strtotime($paper->created_date));?></td> -->
                 <td>
-                  <a class="btn btn-warning" href="<?php echo base_url('authors/view/');echo $paper->paper_id;?>" ><i class="glyphicon glyphicon-edit"></i></a>
-                  <a class="btn btn-danger" onclick="delete_paper(<?php echo $paper->paper_id;?>)"><i class="glyphicon glyphicon-trash"></i></a>
+                  <a class="btn btn-warning" href="<?php echo base_url('authors/view/');echo $paper->paper_id;?>" ><i class="fa fa-edit"></i></a>
+                  <a class="btn btn-danger" onclick="delete_paper(<?php echo $paper->paper_id;?>)"><i class="fa fa-trash"></i></a>
 
                 </td>
               </tr>

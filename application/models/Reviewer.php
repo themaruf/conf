@@ -9,7 +9,7 @@ class Reviewer extends CI_Model
 
             return ($this->db->get()->num_rows() == 1);
         }
-
+        //touched
         public function is_logged_in(){
 
             return $this->session->has_userdata('reviewer_id');
@@ -23,8 +23,10 @@ class Reviewer extends CI_Model
             return ($this->db->get()->num_rows() >= 1);
         }
 
-        public function signup_new_user($first_name, $last_name, $phone, $dob, $email, $password)
+        //touched
+        public function signup_new_user($invitation_id, $first_name, $last_name, $phone, $dob, $email, $password)
         {
+            $this->db->trans_start();
             $author_data = array(
                 'first_name' => $first_name,
                 'last_name' => $last_name,
@@ -33,7 +35,16 @@ class Reviewer extends CI_Model
                 'email' => $email,
                 'password' => $password
             );
-            return $this->db->insert('authors', $author_data);          
+            $this->db->insert('reviewers', $author_data); 
+            $this->db->delete('reviewer_invitations', array('reviewer_invitation_id' => $invitation_id));
+            
+            $this->db->trans_complete();
+            if ($this->db->trans_status() === FALSE){
+                return false;
+            }
+            else{
+                return true;
+            }         
         }
 
         //touched

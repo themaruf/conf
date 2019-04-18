@@ -24,6 +24,7 @@ $this->load->view("partial/header_normal");
            <!--  <?php if ( $message!= null ) echo $message;?> -->
       </div>
 <?php echo form_open('reviewers/validate', array('id' => 'signup-form')) ?>
+      <input type="hidden" name="invitation_id" value="<?php echo $invitation_id;?>"/>
       <label>First Name</label>
       <div class="input-group">
             <span class="fa fa-user" aria-hidden="true"></span>
@@ -113,8 +114,6 @@ body a {
       -ms-transition: 0.5s all;
       text-decoration: none;
       letter-spacing:1px;
-      font-size:15px;
-      font-weight:600;
 }
 body a:hover {
       text-decoration: none;

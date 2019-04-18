@@ -87,8 +87,6 @@ body a {
 	-ms-transition: 0.5s all;
 	text-decoration: none;
 	letter-spacing:1px;
-	font-size:15px;
-	font-weight:600;
 }
 body a:hover {
 	text-decoration: none;

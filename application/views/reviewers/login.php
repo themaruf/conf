@@ -34,7 +34,6 @@ $this->load->view("partial/header_normal");
       <input type="password" name="password" value="<?php echo set_value('password'); ?>" placeholder="password"/>
     </div>
       <button>Login</button>
-      <p class="message">Not registered? <a href="<?php echo base_url();?>reviewers/signup">Create an account</a></p>
 <?php echo form_close(); ?>
   </div>
 </div> 
@@ -87,8 +86,6 @@ body a {
 	-ms-transition: 0.5s all;
 	text-decoration: none;
 	letter-spacing:1px;
-	font-size:15px;
-	font-weight:600;
 }
 body a:hover {
 	text-decoration: none;

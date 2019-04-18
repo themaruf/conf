@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view("partial/header");
-$this->load->view("partial/header_author");
+$this->load->view("partial/header_admin");
 var_dump($paper_data);
 ?>
 <div>
