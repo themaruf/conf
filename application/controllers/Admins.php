@@ -115,13 +115,55 @@ class Admins extends CI_Controller {
         }
 	}
 
+	public function editinfo(){
+		$data['admin_info'] = $this->Admin->get_admin($this->session->userdata('admin_id'));
+		$this->load->view('admins/editinfo',$data);
+	}
+
+	public function saveinfo(){
+		$admin_data = array(
+			'address_line_1' => $this->input->post('address_line_1'),
+			'address_line_2' => $this->input->post('address_line_2'),
+			'city' => $this->input->post('city'),
+			'country' => $this->input->post('country'),
+			'description' => $this->input->post('description'),
+			'affiliation' => $this->input->post('affiliation'),
+			'website' => $this->input->post('website'),
+		);
+
+		if($this->Admin->saveinfo($this->session->userdata('admin_id'), $admin_data)){
+			redirect('admins/index');
+		}
+		else{
+			redirect('admins/editinfo');
+		}
+	}
+
 	public function view($paper_id){
 		if($this->Admin->paper_exists($paper_id)){
 			$data['paper_data'] = $this->Admin->get_paper_by_id($paper_id);
 			$data['co_author_data'] = $this->Admin->get_co_author_by_id($paper_id);
+			print_r($data['co_author_data']);
 			$data['reviewers'] = $this->Admin->get_all_reviewers();
-			echo $this->Admin->get_last_query();
+			$data['assigned_reviewers'] = $this->Admin->get_assigned_reviewers($paper_id);
+			print_r($data['assigned_reviewers'] );
+			//echo $this->Admin->get_last_query();
 			$this->load->view('admins/paperform',$data);
+		}
+		else{
+			echo "nothing found";
+		}
+	}
+
+	public function assign_paper(){
+		$reviewers = $this->input->post('reviewers');
+		$paper_id = $this->input->post('paper_id');
+
+		if($this->Admin->assign_paper($paper_id, $reviewers)){
+			echo json_encode(array("result" => TRUE));
+		}
+		else{
+			echo json_encode(array("result" => FALSE));
 		}
 	}
 
@@ -149,8 +191,21 @@ class Admins extends CI_Controller {
 	}
 
 	public function show($paper_id){
-		$data['paper_id'] = $paper_id;
-		$this->load->view('admins/show',$data);
+		if($this->Admin->paper_exists($paper_id)){
+			$data['paper_data'] = $this->Admin->get_paper_by_id($paper_id);
+			$data['co_author_data'] = $this->Admin->get_co_author_by_id($paper_id);
+			$data['assigned_reviewers'] = $this->Admin->get_assigned_reviewers_details($paper_id);
+			//echo $this->Admin->get_last_query();
+			// echo "<pre>";
+			// print_r($data['assigned_reviewers']);
+			$this->load->view('admins/show',$data);
+		}
+		else{
+			echo "nothing found";
+		}
+
+
+
 	}
 
 	public function invitation(){

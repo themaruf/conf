@@ -12,7 +12,7 @@ $this->load->view("partial/header_admin");
             <div class="box-body box-profile">
               <h3 class="profile-username text-center"><?php echo $admin_info->first_name." ". $admin_info->last_name; ?></h3>
 
-              <p class="text-muted text-center">Author</p>
+              <p class="text-muted text-center">Admin</p>
 
               <ul class="list-group list-group-unbordered">
                 <li class="list-group-item">
@@ -23,6 +23,9 @@ $this->load->view("partial/header_admin");
                 </li>
                 <li class="list-group-item">
                   <b>DOB</b> <a class="pull-right"><?php echo $admin_info->dob;?></a>
+                </li>
+                <li class="list-group-item">
+                  <b>Website</b> <a class="pull-right"><?php echo $admin_info->website == NULL ? 'No Website' : $admin_info->website;?></a>
                 </li>
               </ul>
 
@@ -38,7 +41,7 @@ $this->load->view("partial/header_admin");
           <div class="box box-primary">
             <div class="box-header with-border">
               <div class="pull-right">
-                <a class="btn btn-success" href="<?php echo base_url('admins/papers');?>"><i class="fa fa-book"></i> Show Paper</a>
+                <a class="btn btn-success" href="<?php echo base_url('admins/editinfo');?>"><i class="fa fa-edit"></i></a>
               </div>
               <div>
                 <h3 class="box-title">About Me</h3>
@@ -46,35 +49,43 @@ $this->load->view("partial/header_admin");
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <strong><i class="fa fa-book margin-r-5"></i> Education</strong>
+              <strong><i class="fa fa-map-marker margin-r-5"></i> Address Line 1</strong>
 
               <p class="text-muted">
-                B.S. in Computer Science from the University of Tennessee at Knoxville
+                <?php echo $admin_info->address_line_1 == NULL ? 'Not Specified' : $admin_info->address_line_1;?>
+              </p>
+              <hr>
+
+              <strong><i class="fa fa-map-marker margin-r-5"></i> Address Line 2</strong>
+              <p class="text-muted">
+                <?php echo $admin_info->address_line_2 == NULL ? 'Not Specified' : $admin_info->address_line_2;?>
+              </p>
+              <hr>
+
+              <strong><i class="fa fa-building margin-r-5"></i> City</strong>
+              <p class="text-muted">
+                <?php echo $admin_info->city == NULL ? 'Not Specified' : $admin_info->city;?>
+              </p>
+              <hr>
+
+              <strong><i class="fa fa-flag margin-r-5"></i> Country</strong>
+              <p class="text-muted">
+                <?php echo $admin_info->country == NULL ? 'Not Specified' : $admin_info->country;?>
+              </p>
+              <hr>
+
+
+              <strong><i class="fa fa-file-text-o margin-r-5"></i> About Me</strong>
+              <p class="text-muted">
+                <?php echo $admin_info->description == NULL ? 'Not Specified' : $admin_info->description;?>
+              </p>
+              <hr>
+
+              <strong><i class="fa fa-file-text-o margin-r-5"></i> Affiliation</strong>
+              <p class="text-muted">
+                <?php echo $admin_info->affiliation == NULL ? 'Not Specified' : $admin_info->affiliation;?>
               </p>
 
-              <hr>
-
-              <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
-
-              <p class="text-muted">Malibu, California</p>
-
-<!--               <hr>
-
-              <strong><i class="fa fa-pencil margin-r-5"></i> Skills</strong>
-
-              <p>
-                <span class="label label-danger">UI Design</span>
-                <span class="label label-success">Coding</span>
-                <span class="label label-info">Javascript</span>
-                <span class="label label-warning">PHP</span>
-                <span class="label label-primary">Node.js</span>
-              </p> -->
-
-              <hr>
-
-              <strong><i class="fa fa-file-text-o margin-r-5"></i> Notes</strong>
-
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
             </div>
             <!-- /.box-body -->
           </div>

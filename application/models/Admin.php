@@ -50,12 +50,66 @@ class Admin extends CI_Model
 
     //touched
     public function get_admin($admin_id){
+        $this->db->select('admin_id, first_name, last_name, phone_number, dob, address_line_1, address_line_2, city, country, website, affiliation, description, email, deleted');
         $this->db->from('admins');
         $this->db->where('admin_id',$admin_id);
         $this->db->where('deleted',0);
         $query = $this->db->get();
 
         return $query->row();
+    }
+
+    //touched
+    public function saveinfo($admin_id, $admin_data){
+        $this->db->where('admins.admin_id',$admin_id);
+        return $this->db->update('admins', $admin_data);
+    }
+
+    //created
+    public function get_assigned_reviewers($paper_id){
+        $this->db->select('reviewer_id');
+        $this->db->from('paper_reviewer');
+        $this->db->where('paper_id', $paper_id);
+        $query=$this->db->get();
+        return $query->result();
+    }
+
+    //created
+    public function get_assigned_reviewers_details($paper_id){
+        $this->db->select('*');
+        $this->db->from('paper_reviewer');
+        $this->db->join('reviewers','paper_reviewer.reviewer_id = reviewers.reviewer_id');
+        $this->db->where('paper_id', $paper_id);
+        $query=$this->db->get();
+        return $query->result();
+    }
+
+
+    //created
+    public function remove_assigned_reviewers($paper_id){
+        $this->db->where('paper_id', $paper_id);
+        return ($this->db->delete('paper_reviewer'));
+    }
+
+    //created
+    //idea is remove assigned first, then insert selected
+    public function assign_paper($paper_id, $reviewers){
+        $this->db->trans_start();
+        $this->remove_assigned_reviewers($paper_id);
+        foreach ($reviewers as $reviewer) {
+                $paper_rev = array(
+                    'reviewer_id' => $reviewer,
+                    'paper_id' => $paper_id
+                );
+                $this->db->insert('paper_reviewer', $paper_rev); 
+        }
+        $this->db->trans_complete();
+        if ($this->db->trans_status() === FALSE){
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 
     //touched

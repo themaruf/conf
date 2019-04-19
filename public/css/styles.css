@@ -6,6 +6,10 @@
 	color: green;
 }
 
+.srink{
+  max-width: 40px;
+}
+
 /*bootstrap tags input*/
   .label {
       display: inline;

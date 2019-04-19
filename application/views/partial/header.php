@@ -20,6 +20,10 @@
      <link rel="stylesheet" type="text/css" href="<?php echo base_url();?>datatables/datatables.min.css"/>
   <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 
+
+<link rel="stylesheet" href="<?php echo base_url();?>css/sumoselect.min.css"/>
+
+
   <!-- Date Picker -->
   <link rel="stylesheet" href="<?php echo base_url();?>bootstrap/css/bootstrap-datepicker.min.css"/>
   <!-- Daterange picker -->
@@ -60,7 +64,17 @@
   <script src="<?php echo base_url('js/notify.min.js')?>"></script>
 <!-- daterangepicker -->
 <script src="<?php echo base_url();?>js/moment.min.js"></script>
+
+
+<script src="<?php echo base_url();?>js/jquery.sumoselect.min.js"></script>
+
+
 <script src="<?php echo base_url();?>js/daterangepicker.js"></script>
+
+<!-- pdfobject -->
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@2.0.943/build/pdf.min.js"></script>
+<script src="<?php echo base_url();?>js/pdfobject.min.js"></script>
+
 <!-- datepicker -->
 <script src="<?php echo base_url();?>bootstrap/js/bootstrap-datepicker.min.js"></script>
 

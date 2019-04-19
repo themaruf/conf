@@ -132,6 +132,30 @@ class Authors extends CI_Controller {
         }
 	}
 
+	public function editinfo(){
+		$data['author_info'] = $this->Author->get_author($this->session->userdata('author_id'));
+		$this->load->view('authors/editinfo',$data);
+	}
+
+	public function saveinfo(){
+		$author_data = array(
+			'address_line_1' => $this->input->post('address_line_1'),
+			'address_line_2' => $this->input->post('address_line_2'),
+			'city' => $this->input->post('city'),
+			'country' => $this->input->post('country'),
+			'description' => $this->input->post('description'),
+			'affiliation' => $this->input->post('affiliation'),
+			'website' => $this->input->post('website'),
+		);
+
+		if($this->Author->saveinfo($this->session->userdata('author_id'), $author_data)){
+			redirect('authors/index');
+		}
+		else{
+			redirect('authors/editinfo');
+		}
+	}
+
 	public function logout(){
 		$this->session->unset_userdata('author_id');
 		redirect('authors/login');

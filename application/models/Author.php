@@ -37,23 +37,29 @@ class Author extends CI_Model
                 return FALSE;
         }
 
-        public function get_logged_in_author(){
-            if($this->session->userdata('author_id') != null){
-                return $this->session->userdata('author_id');
-            }
-            else{
-                return 0;
-            }
+    public function get_logged_in_author(){
+        if($this->session->userdata('author_id') != null){
+            return $this->session->userdata('author_id');
         }
-
-        public function get_author($author_id){
-            $this->db->from('authors');
-            $this->db->where('author_id',$author_id);
-            $this->db->where('deleted',0);
-            $query = $this->db->get();
-
-            return $query->row();
+        else{
+            return 0;
         }
+    }
+
+    public function get_author($author_id){
+        $this->db->select('author_id, first_name, last_name, phone_number, dob, address_line_1, address_line_2, city, country, website, affiliation, description, email, deleted');
+        $this->db->from('authors');
+        $this->db->where('author_id',$author_id);
+        $this->db->where('deleted',0);
+        $query = $this->db->get();
+
+        return $query->row();
+    }
+
+    public function saveinfo($author_id, $author_data){
+        $this->db->where('authors.author_id',$author_id);
+        return $this->db->update('authors', $author_data);
+    }
 
     public function get_search_suggestions_author($search, $limit = 10)
     {
