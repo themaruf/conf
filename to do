@@ -11,3 +11,8 @@ Admin part:
 
 Reviewer part: 
 	DONE-add a invalid reg page http://localhost/conf/public/reviewers/register/******* 
+
+
+
+SQL: 
+review_history table add new constrain of reviewer_id with reviewers.reviewer_id

@@ -74,6 +74,17 @@ class Admin extends CI_Model
         return $query->result();
     }
 
+    public function get_review_history($paper_id){
+        $this->db->from('review_history');
+        $this->db->join('reviews','reviews.review_id = review_history.review_id');
+        $this->db->join('reviewers','reviewers.reviewer_id = review_history.reviewer_id');
+        $this->db->where('review_history.paper_id',$paper_id);
+        $this->db->order_by('review_history.timestamp', 'ASC');
+        
+        $query=$this->db->get();
+        return $query->result();
+    }
+
     //created
     public function get_assigned_reviewers_details($paper_id){
         $this->db->select('*');

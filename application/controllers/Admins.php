@@ -185,8 +185,8 @@ class Admins extends CI_Controller {
 	      }
 	}
 
-	public function showPaper($file_name){
-		$data['file_name'] = $file_name;
+	public function showpaper($paper_id){
+		$data['paper_id'] = $paper_id;
 		$this->load->view('admins/showpaper',$data);
 	}
 
@@ -195,17 +195,18 @@ class Admins extends CI_Controller {
 			$data['paper_data'] = $this->Admin->get_paper_by_id($paper_id);
 			$data['co_author_data'] = $this->Admin->get_co_author_by_id($paper_id);
 			$data['assigned_reviewers'] = $this->Admin->get_assigned_reviewers_details($paper_id);
-			//echo $this->Admin->get_last_query();
-			// echo "<pre>";
-			// print_r($data['assigned_reviewers']);
+			$data['review_data'] = $this->Admin->get_review_history($paper_id);
+
+			foreach ($data['review_data'] as $rev) {
+				//appending score text for showing comment timeline
+				$rev->review_score_text = $this->PartialModel->return_score_text($rev->review_score);
+			}
+
 			$this->load->view('admins/show',$data);
 		}
 		else{
 			echo "nothing found";
 		}
-
-
-
 	}
 
 	public function invitation(){

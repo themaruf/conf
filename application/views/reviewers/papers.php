@@ -31,7 +31,7 @@ $this->load->view("partial/header_reviewer");
                  <td><?php echo $paper->status;?></td>
                 <!-- <td><?php echo date("d-M-Y",strtotime($paper->created_date));?></td> -->
                 <td>
-                  <a class="btn btn-warning" href="<?php echo base_url('reviewers/view/');echo $paper->paper_id;?>" ><i class="fa fa-edit"></i></a>
+                  <a class="btn btn-info" href="<?php echo base_url('reviewers/view/');echo $paper->paper_id;?>" ><i class="fa fa-edit"></i></a>
                   <a class="btn btn-danger" onclick="delete_paper(<?php echo $paper->paper_id;?>)"><i class="fa fa-trash"></i></a>
 
                 </td>

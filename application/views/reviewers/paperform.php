@@ -1,18 +1,19 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view("partial/header");
-$this->load->view("partial/header_admin");
+$this->load->view("partial/header_reviewer");
 //var_dump($review_data);
 ?>
 <div>
-  <h1>Paper information<h2>
+  <h1>Evaluate Paper<h2>
 </div>
+<form action="<?php echo base_url('reviewers/evaluatepaper');?>" id="form" method="post" class="form-horizontal" enctype="multipart/form-data">
 <div class="table-responsive-md">
   <table class="table table-bordered">
     <tbody>
       <tr>
         <th class="srink" scope="row">Paper ID</th>
-        <td><?php echo $paper_data->paper_id;?> <a class="btn btn-info pull-right" href="<?php echo base_url('admins/view/');echo $paper_data->paper_id;?>" ><i class="fa fa-edit"></i></a></td>
+        <td><input name="paper_id" class="form-control" value="<?php echo $paper_data->paper_id;?>" type="text" readonly></td>
       </tr>
       <tr>
         <th class="srink" scope="row">Paper Title</th>
@@ -26,37 +27,6 @@ $this->load->view("partial/header_admin");
         <th class="srink" scope="row">Abstract</th>
         <td><?php echo $paper_data->abstract;?></td>
       </tr>
-      <tr>
-        <th class="srink" scope="row">Co Authors</th>
-        <td>
-          <?php 
-            $i=1;
-            foreach ($co_author_data as $key => $value) {
-            if($value != ''){
-           		echo $value;
-              	echo "<br/>";
-				if($i%2 == 0){
-				echo "<hr>";
-				}
-            }
-            $i++;
-          }?>
-        </td>
-      </tr>
-
-      <tr>
-        <th class="srink" scope="row">Assigned Reviewers</th>
-        <td>
-        	<?php 
-        		foreach ($assigned_reviewers as $ass_rev) {
-        			echo $ass_rev->first_name. " ". $ass_rev->last_name. "<br/>" .$ass_rev->email ;
-        			echo "<hr>";
-        		}
-        	?>
-        </td>
-      </tr>
-
-
       <tr>
         <th class="srink" scope="row">File</th>
         <td>
@@ -75,19 +45,48 @@ $this->load->view("partial/header_admin");
               <p>
                 <?php echo $review->review_comments?>
               </p>
-              <cite>- <?php echo $review->first_name. " ". $review->last_name?></cite>
             </div>
           <?php
             }
           ?>
         </td>
       </tr>
+      <tr>
+<!--    -2 Reject
+        -1 Weakly Reject
+         0 Neutral
+         1 Weakly Accept
+         2 Accept -->
+      <th class="srink" scope="row">Score</th>
+        <td>
+            <select class="form-control" name="review_score" id="review_score">
+                  <option value="-2">Reject</option>
+                  <option value="-1">Weakly Reject</option>
+                  <option value="0">Neutral</option>
+                  <option value="1">Weakly Accept</option>
+                  <option value="2">Accept</option>
+            </select> 
+        </td>
+      </tr>
 
+      <tr>
+        <th class="srink" scope="row">Comment</th>
+        <td>
+            <textarea name="review_comments" id="review_comments" class="form-control" rows="8"></textarea>
+        </td>
+      </tr>
+
+      <tr>
+        <th class="srink" scope="row"></th>
+        <td><button class="btn btn-info" id="eval_btn">Evaluate</button></td>
+      </tr>
     </tbody>
   </table>
 </div>
+</form>
 
 <?php $this->load->view("partial/footer"); ?>
+
 
 
 <style type="text/css">

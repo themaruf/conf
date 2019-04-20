@@ -28,23 +28,22 @@ class Authors extends CI_Controller {
 		$this->load->view('authors/papers',$data);
 	}
 
-	public function view($paper_id = -1){
-		if($paper_id > 0){
-			$data['paper_data'] = $this->Author->get_paper_by_id($paper_id);
-			$this->load->view('authors/paperform',$data);
-		}
-		else{
-			$data['paper_data'] = (object)[
-									  "paper_name" => "",
-									  "paper_keywords" => "",
-									  "abstract" => "",
-									  "file_url" => ""
-									];
+	// public function view($paper_id = -1){
+	// 	if($paper_id > 0){
+	// 		$data['paper_data'] = $this->Author->get_paper_by_id($paper_id);
+	// 		$this->load->view('authors/paperform',$data);
+	// 	}
+	// 	else{
+	// 		$data['paper_data'] = (object)[
+	// 								  "paper_name" => "",
+	// 								  "paper_keywords" => "",
+	// 								  "abstract" => "",
+	// 								  "file_url" => ""
+	// 								];
 
-			$this->load->view('authors/paperform',$data);
-		}
-
-	}
+	// 		$this->load->view('authors/paperform',$data);
+	// 	}
+	// }
 
 	public function signup()
 	{
@@ -155,6 +154,30 @@ class Authors extends CI_Controller {
 			redirect('authors/editinfo');
 		}
 	}
+
+	public function showpaper($paper_id){
+		$data['paper_id'] = $paper_id;
+		$this->load->view('authors/showpaper',$data);
+	}
+
+	public function show($paper_id){
+		if($this->Author->paper_exists($paper_id)){
+			$data['paper_data'] = $this->Author->get_paper_by_id($paper_id);
+			$data['co_author_data'] = $this->Author->get_co_author_by_id($paper_id);
+			//getting this reviewer's review history
+			$data['review_data'] = $this->Author->get_review_history($paper_id);
+
+			foreach ($data['review_data'] as $rev) {
+				//appending score text for showing comment timeline
+				$rev->review_score_text = $this->PartialModel->return_score_text($rev->review_score);
+			}
+			$this->load->view('authors/show',$data);
+		}
+		else{
+			echo "nothing found";
+		}
+	}
+
 
 	public function logout(){
 		$this->session->unset_userdata('author_id');
@@ -280,8 +303,4 @@ class Authors extends CI_Controller {
 		$this->load->view('authors/addpaper');
 	}
 
-	public function showPaper($file_name){
-		$data['file_name'] = $file_name;
-		$this->load->view('authors/showpaper',$data);
-	}
 }

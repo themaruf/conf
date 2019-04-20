@@ -31,8 +31,17 @@ class Reviewers extends CI_Controller {
 
 	public function view($paper_id = -1){
 		if($paper_id > 0){
-			$data['paper_data'] = $this->Author->get_paper_by_id($paper_id);
-			$this->load->view('authors/paperform',$data);
+			$data['paper_data'] = $this->Reviewer->get_paper_by_id($paper_id);
+			//getting this reviewer's review history
+			$data['review_data'] = $this->Reviewer->get_review_history($paper_id, $this->session->userdata('reviewer_id'));
+
+			foreach ($data['review_data'] as $rev) {
+				//appending score text for showing comment timeline
+				$rev->review_score_text = $this->PartialModel->return_score_text($rev->review_score);
+			}
+
+
+			$this->load->view('reviewers/paperform',$data);
 		}
 		else{
 			$data['paper_data'] = (object)[
@@ -41,10 +50,24 @@ class Reviewers extends CI_Controller {
 									  "abstract" => "",
 									  "file_url" => ""
 									];
-
-			$this->load->view('authors/paperform',$data);
+			$this->load->view('reviewers/paperform',$data);
 		}
+	}
 
+	public function evaluatepaper(){
+		$review_score = $this->input->post('review_score');
+		$review_comments = $this->input->post('review_comments');
+		$paper_id = $this->input->post('paper_id');
+
+		date_default_timezone_set('Asia/Dhaka');
+	    $timestamp = date('Y-m-d G:i:s');
+
+		if($this->Reviewer->evaluate_paper($paper_id, $review_score, $review_comments, $timestamp)){
+			redirect('reviewers/papers');
+		}
+		else{
+			redirect('reviewers/evaluatepaper');
+		}
 	}
 
 	//touched
@@ -139,6 +162,32 @@ class Reviewers extends CI_Controller {
         	}
             
         }
+	}
+
+	public function editinfo(){
+		$data['reviewer_info'] = $this->Reviewer->get_reviewer($this->session->userdata('reviewer_id'));
+		$this->load->view('reviewers/editinfo',$data);
+	}
+
+	public function saveinfo(){
+		$reviewer_data = array(
+			'address_line_1' => $this->input->post('address_line_1'),
+			'address_line_2' => $this->input->post('address_line_2'),
+			'city' => $this->input->post('city'),
+			'country' => $this->input->post('country'),
+			'description' => $this->input->post('description'),
+			'affiliation' => $this->input->post('affiliation'),
+			'website' => $this->input->post('website'),
+			'keywords' => $this->input->post('keywords'),
+			'cv_url' => $this->input->post('cv_url'),
+		);
+
+		if($this->Reviewer->saveinfo($this->session->userdata('reviewer_id'), $reviewer_data)){
+			redirect('reviewers/index');
+		}
+		else{
+			redirect('reviewers/editinfo');
+		}
 	}
 
 	//touched
@@ -270,4 +319,5 @@ class Reviewers extends CI_Controller {
 		$data['file_name'] = $file_name;
 		$this->load->view('authors/showpaper',$data);
 	}
+
 }

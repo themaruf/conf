@@ -9,6 +9,14 @@ class Author extends CI_Model
 
             return ($this->db->get()->num_rows() == 1);
         }
+
+        public function paper_exists($paper_id)
+        {
+            $this->db->from('papers');  
+            $this->db->where('paper_id', $paper_id);
+
+            return ($this->db->get()->num_rows() == 1);
+        }
         
         public function signup_new_user($first_name, $last_name, $phone, $dob, $email, $password)
         {
@@ -56,6 +64,17 @@ class Author extends CI_Model
         return $query->row();
     }
 
+    public function get_review_history($paper_id){
+        $this->db->from('review_history');
+        $this->db->join('reviews','reviews.review_id = review_history.review_id');
+        $this->db->join('reviewers','reviewers.reviewer_id = review_history.reviewer_id');
+        $this->db->where('review_history.paper_id',$paper_id);
+        $this->db->order_by('review_history.timestamp', 'ASC');
+        
+        $query=$this->db->get();
+        return $query->result();
+    }
+
     public function saveinfo($author_id, $author_data){
         $this->db->where('authors.author_id',$author_id);
         return $this->db->update('authors', $author_data);
@@ -95,6 +114,14 @@ class Author extends CI_Model
         public function get_author_data($author_id){
 
         }
+
+    public function get_co_author_by_id($paper_id){
+        $this->db->select('co_author_name0,co_author_email0,co_author_name1,co_author_email1,co_author_name2,co_author_email2,co_author_name3,co_author_email3');
+        $this->db->from('paper_author');
+        $this->db->where('paper_id',$paper_id);
+        $query = $this->db->get();
+        return $query->row();
+    }
 
         public function get_all_papers($author_id)
         {

@@ -70,15 +70,58 @@ class Reviewer extends CI_Model
                 return 0;
             }
         }
-        //touched
-        public function get_reviewer($reviewer_id){
-            $this->db->from('reviewers');
-            $this->db->where('reviewer_id',$reviewer_id);
-            $this->db->where('deleted',0);
-            $query = $this->db->get();
 
-            return $query->row();
+    //touched
+    public function saveinfo($reviewer_id, $reviewer_data){
+        $this->db->where('reviewers.reviewer_id',$reviewer_id);
+        return $this->db->update('reviewers', $reviewer_data);
+    }
+    //touched
+    public function get_reviewer($reviewer_id){
+        $this->db->from('reviewers');
+        $this->db->where('reviewer_id',$reviewer_id);
+        $this->db->where('deleted',0);
+        $query = $this->db->get();
+
+        return $query->row();
+    }
+
+    public function get_review_history($paper_id, $reviewer_id){
+        $this->db->from('review_history');
+        $this->db->join('reviews','reviews.review_id = review_history.review_id');
+        $this->db->where('review_history.paper_id',$paper_id);
+        $this->db->where('review_history.reviewer_id',$reviewer_id);
+        $this->db->order_by('review_history.timestamp', 'ASC');
+        
+        $query=$this->db->get();
+        return $query->result();
+    }
+
+    public function evaluate_paper($paper_id, $review_score, $review_comment, $timestamp){
+        $this->db->trans_start();
+        $review_data = array(
+            'review_score' => $review_score,
+            'review_comments' => $review_comment,
+        );
+        $this->db->insert('reviews', $review_data);
+        $insertId = $this->db->insert_id();
+
+        $review_history_data = array(
+            'review_id' => $insertId,
+            'paper_id' => $paper_id,
+            'timestamp' => $timestamp,
+        );
+        $this->db->insert('review_history', $review_history_data);
+
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE){
+            return false;
         }
+        else{
+            return true;
+        }
+    }
 
     public function get_search_suggestions_author($search, $limit = 10)
     {

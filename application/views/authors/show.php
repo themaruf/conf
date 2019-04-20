@@ -1,8 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view("partial/header");
-$this->load->view("partial/header_admin");
-//var_dump($review_data);
+$this->load->view("partial/header_author");
+//var_dump($paper_data);
 ?>
 <div>
   <h1>Paper information<h2>
@@ -12,7 +12,7 @@ $this->load->view("partial/header_admin");
     <tbody>
       <tr>
         <th class="srink" scope="row">Paper ID</th>
-        <td><?php echo $paper_data->paper_id;?> <a class="btn btn-info pull-right" href="<?php echo base_url('admins/view/');echo $paper_data->paper_id;?>" ><i class="fa fa-edit"></i></a></td>
+        <td><?php echo $paper_data->paper_id;?></td>
       </tr>
       <tr>
         <th class="srink" scope="row">Paper Title</th>
@@ -45,22 +45,9 @@ $this->load->view("partial/header_admin");
       </tr>
 
       <tr>
-        <th class="srink" scope="row">Assigned Reviewers</th>
-        <td>
-        	<?php 
-        		foreach ($assigned_reviewers as $ass_rev) {
-        			echo $ass_rev->first_name. " ". $ass_rev->last_name. "<br/>" .$ass_rev->email ;
-        			echo "<hr>";
-        		}
-        	?>
-        </td>
-      </tr>
-
-
-      <tr>
         <th class="srink" scope="row">File</th>
         <td>
-          <a href="<?php echo base_url('admins/showpaper/').$paper_data->paper_id;?>" target="_blank"><?php echo $paper_data->file_url?></a>
+        	<a href="<?php echo base_url('authors/showpaper/').$paper_data->paper_id;?>" target="_blank"><?php echo $paper_data->file_url?></a>
         </td>
       </tr>
 
@@ -71,11 +58,10 @@ $this->load->view("partial/header_admin");
             foreach ($review_data as $review) {
           ?>
             <div class="timeline-item" date-is='<?php echo $review->timestamp?>'>
-              <h1><?php echo $review->review_score_text?></h1>
+              <!-- <h1><?php echo $review->review_score_text?></h1> -->
               <p>
                 <?php echo $review->review_comments?>
               </p>
-              <cite>- <?php echo $review->first_name. " ". $review->last_name?></cite>
             </div>
           <?php
             }
@@ -88,6 +74,7 @@ $this->load->view("partial/header_admin");
 </div>
 
 <?php $this->load->view("partial/footer"); ?>
+
 
 
 <style type="text/css">
