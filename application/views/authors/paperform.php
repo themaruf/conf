@@ -68,7 +68,9 @@ $this->load->view("partial/header_author");
 <?php $this->load->view("partial/footer"); ?>
 
 <script>
-        CKEDITOR.replace('editor');
+    CKEDITOR.replace('editor', {
+      height: 250
+    });
 </script>
 
 

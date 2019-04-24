@@ -28,22 +28,22 @@ class Authors extends CI_Controller {
 		$this->load->view('authors/papers',$data);
 	}
 
-	// public function view($paper_id = -1){
-	// 	if($paper_id > 0){
-	// 		$data['paper_data'] = $this->Author->get_paper_by_id($paper_id);
-	// 		$this->load->view('authors/paperform',$data);
-	// 	}
-	// 	else{
-	// 		$data['paper_data'] = (object)[
-	// 								  "paper_name" => "",
-	// 								  "paper_keywords" => "",
-	// 								  "abstract" => "",
-	// 								  "file_url" => ""
-	// 								];
+	public function view($paper_id = -1){
+		if($paper_id > 0){
+			$data['paper_data'] = $this->Author->get_paper_by_id($paper_id);
+			$this->load->view('authors/paperform',$data);
+		}
+		else{
+			$data['paper_data'] = (object)[
+									  "paper_name" => "",
+									  "paper_keywords" => "",
+									  "abstract" => "",
+									  "file_url" => ""
+									];
 
-	// 		$this->load->view('authors/paperform',$data);
-	// 	}
-	// }
+			$this->load->view('authors/paperform',$data);
+		}
+	}
 
 	public function signup()
 	{

@@ -11,13 +11,10 @@ $this->load->view("partial/header_author");
     <table id="table_id" class="table table-striped table-bordered table-responsive">
       <thead>
         <tr>
-            <th>Paper ID</th>
-            <th>Title</th>
-            <th>Keywords</th>
-            <th>Abstract</th>
-            <th>Status</th>
-          <th style="width:80px;">Action
-          </p></th>
+            <th style="width:15%;">Paper ID</th>
+            <th style="width:40%;">Paper Title</th>
+            <th style="width:40%;">Keywords</th>
+          <th style="width:10%;">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -27,8 +24,6 @@ $this->load->view("partial/header_author");
                  <td><?php echo $paper->paper_id;?></td>
                  <td><?php echo $paper->paper_name;?></td>
                  <td><?php echo $paper->paper_keywords;?></td>
-                 <td><?php echo $paper->abstract;?></td>
-                 <td><?php echo $paper->status;?></td>
                 <!-- <td><?php echo date("d-M-Y",strtotime($paper->created_date));?></td> -->
                 <td>
                   <a class="btn btn-info" href="<?php echo base_url('authors/show/');echo $paper->paper_id;?>" ><i class="fa fa-eye"></i></a>
@@ -54,7 +49,7 @@ $this->load->view("partial/header_author");
   $(document).ready( function () {
       $('#table_id').dataTable({
        "columnDefs": [
-          { "targets": [4,5],
+          { "targets": 3,
            "orderable": false }
         ],
 
@@ -63,7 +58,7 @@ $this->load->view("partial/header_author");
         },
 
         "columnDefs": [
-          { "targets": [3,4,5],
+          { "targets": 3,
            "searchable": false }
         ],
         "pageLength": 10
