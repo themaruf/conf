@@ -3,8 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view("partial/header");
 $this->load->view("partial/header_author");
 ?>
-
-<div class="col-md-12">
+<!-- https://codepen.io/gab/pen/Bxpwi -->
+<div>
   <div>
     <?php //var_dump($query);?>
     <br/>
@@ -13,8 +13,8 @@ $this->load->view("partial/header_author");
         <tr>
             <th style="width:15%;">Paper ID</th>
             <th style="width:40%;">Paper Title</th>
-            <th style="width:40%;">Keywords</th>
-          <th style="width:10%;">Action</th>
+            <th style="width:35%;">Keywords</th>
+          <th style="width:15%;">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -27,7 +27,7 @@ $this->load->view("partial/header_author");
                 <!-- <td><?php echo date("d-M-Y",strtotime($paper->created_date));?></td> -->
                 <td>
                   <a class="btn btn-info" href="<?php echo base_url('authors/show/');echo $paper->paper_id;?>" ><i class="fa fa-eye"></i></a>
-<!--                   <a class="btn btn-info" href="<?php echo base_url('authors/view/');echo $paper->paper_id;?>" ><i class="fa fa-edit"></i></a> -->
+                   <a class="btn btn-info" href="<?php echo base_url('authors/view/');echo $paper->paper_id;?>" ><i class="fa fa-edit"></i></a>
                   <a class="btn btn-danger" onclick="delete_paper(<?php echo $paper->paper_id;?>)"><i class="fa fa-trash"></i></a>
 
                 </td>

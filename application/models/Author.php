@@ -169,6 +169,11 @@ class Author extends CI_Model
             }
         }
 
+    public function update_paper($paper_id_update, $paper_data){
+        $this->db->where('paper_id',$paper_id_update);
+        return $this->db->update('papers', $paper_data);
+    }
+
       public function delete_by_id($paper_id)
       {
         $this->db->trans_start();

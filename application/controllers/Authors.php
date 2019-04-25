@@ -263,9 +263,7 @@ class Authors extends CI_Controller {
         // Email subject
         $mail->Subject = 'A Paper is submitted on ConfMag';  
         // Email body content
-        $mailContent = "<h1>Your Paper is Submitted on ConfMag</h1>
-            <p>Register as a reviewer on ConfMag</p>
-            <a href=$reg_link target='_blank'>Register as a reviewer on ConfMag</a>";
+        $mailContent = "<h1>Your Paper is Submitted on ConfMag</h1>";
         $mail->Body = $mailContent;
         // Send email
         if(!$mail->send()){
@@ -283,8 +281,80 @@ class Authors extends CI_Controller {
       }
 	}
 
+	public function get_filename($path, $filename){
+	    if ($pos = strrpos($filename, '.')) {
+	           $name = substr($filename, 0, $pos);
+	           $ext = substr($filename, $pos);
+	    } else {
+	           $name = $filename;
+	    }
+
+	    $newpath = $path.'/'.$filename;
+	    $newname = $filename;
+	    $counter = 0;
+	    while (file_exists($newpath)) {
+	           $newname = $name .'_'. $counter . $ext;
+	           $newpath = $path.'/'.$newname;
+	           $counter++;
+	     }
+
+	    return $newname;
+	}
+
 	public function paper_update(){
-		//todo
+
+      $paper_id_update = $this->input->post('paper_id') == NULL ? '' : $this->input->post('paper_id');
+
+		$config = array(
+		'upload_path' => "./uploads/",
+		'allowed_types' => "pdf",
+		'overwrite' => FALSE,
+		'max_size' => "80480000", // Can be set to particular file size , here it is 80 MB
+		'file_name' => $paper_id_update
+		);
+
+		//print_r( $this->get_filename("./uploads/", $paper_id_update.'pdf') );
+		//echo var_dump($config['upload_path']);
+		$this->load->library('upload', $config);
+		$this->upload->initialize($config);
+
+		if($this->upload->do_upload('paper_file'))
+		{
+			$data = array('upload_data' => $this->upload->data());
+			//print_r($data);
+		}
+		else{
+			$data = array();
+		}
+
+		if (empty($data)) {
+			$paper_data = array(
+		      	  'paper_id' => $paper_id_update,
+		          'paper_keywords' => $this->input->post('keywords') == NULL ? '' : $this->input->post('keywords'),
+		          'abstract' => $this->input->post('abstract') == NULL ? '' : $this->input->post('abstract'),
+		        );
+		}
+		else{
+			$paper_data = array(
+		      	  'paper_id' => $paper_id_update,
+		          'paper_keywords' => $this->input->post('keywords') == NULL ? '' : $this->input->post('keywords'),
+		          'file_url' => $data['upload_data']['file_name'],
+		          'abstract' => $this->input->post('abstract') == NULL ? '' : $this->input->post('abstract'),
+		        );
+		}
+
+      $insert = $this->Author->update_paper($paper_id_update,$paper_data);
+      //successfull insert
+      if($insert)
+      {
+        echo json_encode(array("result" => TRUE));
+        redirect('authors/papers');
+      }
+      else
+      {
+        echo json_encode(array("result" => FALSE));
+        redirect('authors/view');
+      }
 	}
 
 	public function ajax_search_author($author_id){

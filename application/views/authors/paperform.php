@@ -2,68 +2,70 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view("partial/header");
 $this->load->view("partial/header_author");
-//var_dump($paper_data);
+//var_dump($review_data);
+
+$temp_files = glob(__dir__.'/*');
+foreach($temp_files as $file) {
+  print_r($file);
+  echo "<br/>";
+}
+
 ?>
-
-<form action="<?php echo base_url('authors/paper_add');?>" id="form" method="post" class="form-horizontal" enctype="multipart/form-data">
-  <div class="form-body">
-      <div class="form-group">
-          <h3 class="control-label col-md-3">Paper Form</h3>
-      </div>
-      <div class="form-group">
-      <label class="control-label col-md-3">Paper Title</label>
-      <div class="col-md-9">
-        <input name="paper_title" placeholder="Paper Title" class="form-control" value="<?php echo $paper_data->paper_name;?>" type="text">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="control-label col-md-3">Keywords</label>
-      <div class="col-md-9">
-        <input name="keywords" placeholder="Keywords" data-role="tagsinput" class="form-control" value="<?php echo $paper_data->paper_keywords;?>" type="text">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="control-label col-md-3">Abstract</label>
-      <div class="col-md-9">
-      <textarea name="abstract" id="editor" class="form-control">
-        <?php echo $paper_data->abstract;?>
-      </textarea>
-      </div>
-    </div>
-
-<!-- https://www.codexworld.com/add-remove-input-fields-group-dynamically-jquery/ -->
-<div class="form-group" id="itemRows">
-  <label class="control-label col-md-3">Co Author</label>
-  <div class="col-md-9">
-    <input placeholder="Full Name" class="form-control" type="text" name="add_co_author_name"/> 
-    <input placeholder="Email" class="form-control" type="mail" name="add_co_author_email" /> 
-    <input class="btn btn-success" onclick="addRow(this.form);" type="button" value="Add row" />
-  </div>
+<div>
+  <h1>Update Paper<h2>
 </div>
+<form action="<?php echo base_url('authors/paper_update');?>" id="form" method="post" class="form-horizontal" enctype="multipart/form-data">
+<div class="table-responsive-md">
+  <table class="table table-bordered">
+    <tbody>
+      <tr>
+        <th class="srink" scope="row">Paper ID</th>
+        <td><input name="paper_id" class="form-control" value="<?php echo $paper_data->paper_id;?>" type="text" readonly></td>
+      </tr>
+      <tr>
+        <th class="srink" scope="row">Paper Title</th>
+        <td><input name="paper_title" placeholder="Paper Title" class="form-control" value="<?php echo $paper_data->paper_name;?>" type="text" readonly></td>
+      </tr>
+      <tr>
+        <th class="srink" scope="row">Keywords</th>
+        <td><input name="keywords" placeholder="Keywords" data-role="tagsinput" class="form-control" value="<?php echo $paper_data->paper_keywords;?>" type="text"></td>
+      </tr>
+      <tr>
+        <th class="srink" scope="row">Abstract</th>
+        <td>
+          <textarea name="abstract" id="editor" class="form-control">
+            <?php echo $paper_data->abstract;?>
+          </textarea>
+        </td>
+      </tr>
+      <tr>
+        <th class="srink" scope="row">File</th>
+        <td>
+          <p>
+            
+            <?php
+            //todo show same type name file
+            // echo base_url();
+            foreach (glob(base_url() . '/uploads/*.{pdf}') as $filename) {
+                print_r($filename);
+            }
+            ?>
 
 
-    <div class="form-group">
-      <label class="control-label col-md-3">File</label>
-      <div class="col-md-9">
-        <input type="file" name="paper_file" id="paper_file">
-<!--         <a href="<?php echo site_url('authors/showPaper/'); echo $paper_data->file_url; ?>" id="file_link" target="_blank"><?php echo $paper_data->file_url;?></a> -->
-      </div>
-    </div>
+          </p>
+          <a href="<?php echo base_url('authors/showPaper/').$paper_data->paper_id;?>" target="_blank"><?php echo $paper_data->file_url?></a>
+          <input type="file" name="paper_file" id="paper_file">
+        </td>
+      </tr>
 
-    <div class="form-group">
-      <label class="control-label col-md-3"></label>
-      <div class="col-md-9">
-        <input class="btn btn-info" type="submit" name="save" value="Save">
-      </div>
-    </div>
-
-    
-    <!-- <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button> -->
-
-  </div>
+      <tr>
+        <th class="srink" scope="row"></th>
+        <td><input class="btn btn-info" type="submit" name="save" value="Save"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 </form>
-
-
 
 <?php $this->load->view("partial/footer"); ?>
 
@@ -71,32 +73,4 @@ $this->load->view("partial/header_author");
     CKEDITOR.replace('editor', {
       height: 250
     });
-</script>
-
-
-<script type="text/javascript">
-  var rowNum = 0;
-  function addRow(frm) {
-    if(jQuery("input[name=add_co_author_name]").val() != "" && jQuery("input[name=add_co_author_email]").val() != "" && isEmail(jQuery("input[name=add_co_author_email]").val())){
-        rowNum ++;
-        var row = '<div class="form-group"><label class="control-label col-md-3"></label><div class="col-md-9" id="rowNum'+rowNum+'"> <input placeholder="Full Name" class="form-control" type="text" name="name[]" value="'+frm.add_co_author_name.value+'"> <input placeholder="Email" class="form-control"  type="text" name="email[]" value="'+frm.add_co_author_email.value+'"> <input class="btn btn-danger" type="button" value="Remove" onclick="removeRow('+rowNum+');"></div></div>';
-        jQuery('#itemRows').append(row);
-        frm.add_co_author_name.value = '';
-        frm.add_co_author_email.value = '';
-    }
-    else{
-      alert("Enter Name And Email");
-    }
-
-  }
-
-  function removeRow(rnum) {
-    jQuery('#rowNum'+rnum).remove();
-  }
-
-  function isEmail(email) {
-    var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-    return regex.test(email);
-  }
-
 </script>
