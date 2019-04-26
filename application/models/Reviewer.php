@@ -86,6 +86,14 @@ class Reviewer extends CI_Model
         return $query->row();
     }
 
+    public function get_files_by_id($paper_id){
+        $this->db->from('paper_files');
+        $this->db->where('paper_files.paper_id',$paper_id);
+        $this->db->order_by('paper_files.upload_time','ASC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function get_review_history($paper_id, $reviewer_id){
         $this->db->from('review_history');
         $this->db->join('reviews','reviews.review_id = review_history.review_id');
@@ -97,7 +105,7 @@ class Reviewer extends CI_Model
         return $query->result();
     }
 
-    public function evaluate_paper($paper_id, $review_score, $review_comment, $timestamp){
+    public function evaluate_paper($paper_id, $review_score, $review_comment, $reviewer_id, $timestamp){
         $this->db->trans_start();
         $review_data = array(
             'review_score' => $review_score,
@@ -109,6 +117,7 @@ class Reviewer extends CI_Model
         $review_history_data = array(
             'review_id' => $insertId,
             'paper_id' => $paper_id,
+            'reviewer_id' => $reviewer_id,
             'timestamp' => $timestamp,
         );
         $this->db->insert('review_history', $review_history_data);
@@ -205,24 +214,25 @@ class Reviewer extends CI_Model
             }
         }
 
-      public function delete_by_id($paper_id)
-      {
-        $this->db->trans_start();
-        $deleted = array('deleted' => 1);  
-        $this->db->where('paper_id', $paper_id);
-        $this->db->update('papers',$deleted);
+      // public function delete_by_id($paper_id)
+      // {
+      //   $this->db->trans_start();
+      //   $deleted = array('deleted' => 1);  
+      //   $this->db->where('paper_id', $paper_id);
+      //   $this->db->update('papers',$deleted);
 
-        $this->db->delete('paper_author', array('paper_id' => $paper_id));
+      //   $this->db->delete('paper_author', array('paper_id' => $paper_id));
+      //   $this->db->delete('paper_reviewer', array('paper_id' => $paper_id));
 
-        $this->db->trans_complete();
+      //   $this->db->trans_complete();
 
-        if ($this->db->trans_status() === FALSE){
-            return false;
-        }
-        else{
-            return true;
-        }
-      }
+      //   if ($this->db->trans_status() === FALSE){
+      //       return false;
+      //   }
+      //   else{
+      //       return true;
+      //   }
+      // }
 
     
 }

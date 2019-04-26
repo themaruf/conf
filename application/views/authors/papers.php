@@ -5,9 +5,7 @@ $this->load->view("partial/header_author");
 ?>
 <!-- https://codepen.io/gab/pen/Bxpwi -->
 <div>
-  <div>
-    <?php //var_dump($query);?>
-    <br/>
+  <div class="table-responsive">
     <table id="table_id" class="table table-striped table-bordered table-responsive">
       <thead>
         <tr>

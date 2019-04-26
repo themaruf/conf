@@ -8,6 +8,14 @@ class Authors extends CI_Controller {
         parent::__construct();
     }
 
+    private function _is_logged_in() {
+        if($this->session->userdata('author_id')){
+            return true;        
+        } else {
+            return false;
+        }
+    }
+
     //dashboard
 	public function index()
 	{
@@ -24,13 +32,19 @@ class Authors extends CI_Controller {
 	}
 
 	public function papers(){
-		$data['papers'] = $this->Author->get_all_papers($this->session->userdata('author_id'));
-		$this->load->view('authors/papers',$data);
+		if($this->_is_logged_in()){
+			$data['papers'] = $this->Author->get_all_papers($this->session->userdata('author_id'));
+			$this->load->view('authors/papers',$data);
+		}
+		else{
+			redirect('authors/index');
+		}
 	}
 
 	public function view($paper_id = -1){
 		if($paper_id > 0){
 			$data['paper_data'] = $this->Author->get_paper_by_id($paper_id);
+			$data['paper_files_data'] = $this->Author->get_files_by_id($paper_id);
 			$this->load->view('authors/paperform',$data);
 		}
 		else{
@@ -41,7 +55,7 @@ class Authors extends CI_Controller {
 									  "file_url" => ""
 									];
 
-			$this->load->view('authors/paperform',$data);
+			$this->load->view('authors/paperformadd',$data);
 		}
 	}
 
@@ -72,7 +86,7 @@ class Authors extends CI_Controller {
 	        else
 	        {
 	            $email = $this->input->post('email');
-	            $password = $this->input->post('password');
+	            $password = $this->encrypt->decode($this->input->post('password')) ;
 
 	            if(!$this->Author->login_author($email, $password))
 				{
@@ -119,7 +133,7 @@ class Authors extends CI_Controller {
         		$phone = $this->input->post('phone_number');
         		$dob = $this->input->post('dob');
         		$email = $this->input->post('email');
-                $password = $this->input->post('password');
+                $password = $this->encrypt->encode($this->input->post('password'));
                 //check if inserted into db
                 if($this->Author->signup_new_user($first_name, $last_name, $phone, $dob, $email, $password)){
                 	$data['message'] = "Your account is created";
@@ -155,8 +169,8 @@ class Authors extends CI_Controller {
 		}
 	}
 
-	public function showpaper($paper_id){
-		$data['paper_id'] = $paper_id;
+	public function showpaper($paper_name){
+		$data['paper_name'] = $paper_name;
 		$this->load->view('authors/showpaper',$data);
 	}
 
@@ -164,6 +178,7 @@ class Authors extends CI_Controller {
 		if($this->Author->paper_exists($paper_id)){
 			$data['paper_data'] = $this->Author->get_paper_by_id($paper_id);
 			$data['co_author_data'] = $this->Author->get_co_author_by_id($paper_id);
+			$data['paper_files_data'] = $this->Author->get_files_by_id($paper_id);
 			//getting this reviewer's review history
 			$data['review_data'] = $this->Author->get_review_history($paper_id);
 
@@ -236,19 +251,23 @@ class Authors extends CI_Controller {
       	  'paper_id' => $unique_id,
       	  'paper_name' => $this->input->post('paper_title') == NULL ? '' : $this->input->post('paper_title'),
           'paper_keywords' => $this->input->post('keywords') == NULL ? '' : $this->input->post('keywords'),
-          'file_url' => $data['upload_data']['file_name'],
           'added_time' => $timestamp,
           'abstract' => $this->input->post('abstract') == NULL ? '' : $this->input->post('abstract'),
           'status' => 1,
           'deleted' => 0,
         );
+      $paper_file_data = array(
+      		'paper_id' => $unique_id,
+      		'file_name' => $data['upload_data']['file_name'],
+      		'upload_time' => $timestamp,
+      );
       $paper_author_data = array(
     	'author_id' => $this->session->userdata('author_id'),
     	'paper_id' => $unique_id,
       );
 
 
-      $insert = $this->Author->add_paper($paper_data,$paper_author_data,$co_author_name_array,$co_author_email_array);
+      $insert = $this->Author->add_paper($paper_data,$paper_author_data,$paper_file_data,$co_author_name_array,$co_author_email_array);
       //successfull insert
       if($insert)
       {
@@ -303,7 +322,11 @@ class Authors extends CI_Controller {
 
 	public function paper_update(){
 
-      $paper_id_update = $this->input->post('paper_id') == NULL ? '' : $this->input->post('paper_id');
+		date_default_timezone_set('Asia/Dhaka');
+		$date = date('Y-m-d');
+		$timestamp = date('Y-m-d G:i:s');
+
+		$paper_id_update = $this->input->post('paper_id') == NULL ? '' : $this->input->post('paper_id');
 
 		$config = array(
 		'upload_path' => "./uploads/",
@@ -333,19 +356,26 @@ class Authors extends CI_Controller {
 		          'paper_keywords' => $this->input->post('keywords') == NULL ? '' : $this->input->post('keywords'),
 		          'abstract' => $this->input->post('abstract') == NULL ? '' : $this->input->post('abstract'),
 		        );
+			$update = $this->Author->update_paper($paper_id_update,$paper_data);
 		}
 		else{
+			//update with file upload
 			$paper_data = array(
 		      	  'paper_id' => $paper_id_update,
 		          'paper_keywords' => $this->input->post('keywords') == NULL ? '' : $this->input->post('keywords'),
-		          'file_url' => $data['upload_data']['file_name'],
 		          'abstract' => $this->input->post('abstract') == NULL ? '' : $this->input->post('abstract'),
 		        );
+			$paper_files_data = array(
+		      	  'paper_id' => $paper_id_update,
+		          'file_name' => $data['upload_data']['file_name'],
+		          'upload_time' => $timestamp,
+		        );
+			$update = $this->Author->update_paper_with_file($paper_id_update,$paper_data, $paper_files_data);
 		}
 
-      $insert = $this->Author->update_paper($paper_id_update,$paper_data);
+      
       //successfull insert
-      if($insert)
+      if($update)
       {
         echo json_encode(array("result" => TRUE));
         redirect('authors/papers');
@@ -357,16 +387,6 @@ class Authors extends CI_Controller {
       }
 	}
 
-	public function ajax_search_author($author_id){
-		$author = $this->Author->get_author($author_id);
-		print_r($author);
-	}
-
-	public function suggest_author(){
-		$suggestions = $this->Author->get_search_suggestions_author($this->input->post_get('term'));
-
-		echo json_encode($suggestions);
-	}
 
 	//test function
 	public function addpaper(){

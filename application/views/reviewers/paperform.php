@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view("partial/header");
 $this->load->view("partial/header_reviewer");
-//var_dump($review_data);
+var_dump($review_data);
 ?>
 <div>
   <h1>Evaluate Paper<h2>
@@ -30,7 +30,18 @@ $this->load->view("partial/header_reviewer");
       <tr>
         <th class="srink" scope="row">File</th>
         <td>
-          <a href="<?php echo base_url('admins/showpaper/').$paper_data->paper_id;?>" target="_blank"><?php echo $paper_data->file_url?></a>
+          <div>
+            <?php
+            $i=1;
+            foreach ($paper_files_data as $file) {
+            ?>
+                <a href="<?php echo base_url('reviewers/showPaper/').$file->file_name;?>" target="_blank"><b>version <?php echo $i?></b> -  <?php echo $file->file_name?></a>
+            <?php
+            echo "<br/>";
+            $i++;
+            }
+            ?>
+          </div>
         </td>
       </tr>
 

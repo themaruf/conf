@@ -103,14 +103,6 @@ class Author extends CI_Model
         return $suggestions;
     }
 
-        public function upload_file($filedata){
-            $paper_data = array(
-                'paper_name' => $filedata['file_name'],
-                'file_url' => $filedata['full_path']
-            );
-            return $this->db->insert('papers', $paper_data);  
-        }
-
         public function get_author_data($author_id){
 
         }
@@ -139,14 +131,23 @@ class Author extends CI_Model
 
         public function get_paper_by_id($paper_id){
             $this->db->from('papers');
-            $this->db->where('paper_id',$paper_id);
+            $this->db->where('papers.paper_id',$paper_id);
             $query = $this->db->get();
             return $query->row();
         }
 
-        public function add_paper($paper_data,$paper_author_data,$names,$emails){
+        public function get_files_by_id($paper_id){
+            $this->db->from('paper_files');
+            $this->db->where('paper_files.paper_id',$paper_id);
+            $this->db->order_by('paper_files.upload_time','ASC');
+            $query = $this->db->get();
+            return $query->result();
+        }
+
+        public function add_paper($paper_data,$paper_author_data,$paper_file_data,$names,$emails){
             $this->db->trans_start();
             $this->db->insert('papers', $paper_data);
+            $this->db->insert('paper_files', $paper_file_data);
             $this->db->insert('paper_author',$paper_author_data);
             $insertId = $this->db->insert_id();
 
@@ -174,6 +175,23 @@ class Author extends CI_Model
         return $this->db->update('papers', $paper_data);
     }
 
+    public function update_paper_with_file($paper_id_update, $paper_data, $paper_files_data){
+        $this->db->trans_start();
+        $this->db->where('paper_id',$paper_id_update);
+        $this->db->update('papers', $paper_data);
+
+        $this->db->insert('paper_files', $paper_files_data); 
+               
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
       public function delete_by_id($paper_id)
       {
         $this->db->trans_start();
@@ -182,6 +200,12 @@ class Author extends CI_Model
         $this->db->update('papers',$deleted);
 
         $this->db->delete('paper_author', array('paper_id' => $paper_id));
+
+        $this->db->delete('paper_files', array('paper_id' => $paper_id));
+        
+        $this->db->delete('paper_reviewer', array('paper_id' => $paper_id));
+
+        $this->db->delete('review_history', array('paper_id' => $paper_id));
 
         $this->db->trans_complete();
 

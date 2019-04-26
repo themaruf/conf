@@ -47,7 +47,22 @@ $this->load->view("partial/header_author");
       <tr>
         <th class="srink" scope="row">File</th>
         <td>
-        	<a href="<?php echo base_url('authors/showpaper/').$paper_data->paper_id;?>" target="_blank"><?php echo $paper_data->file_url?></a>
+          <p>
+            
+            <?php
+            $i=1;
+            foreach ($paper_files_data as $file) {
+            ?>
+                <a href="<?php echo base_url('authors/showPaper/').$file->file_name;?>" target="_blank"><b>version <?php echo $i?></b> -  <?php echo $file->file_name?></a>
+            <?php
+            echo "<br/>";
+            $i++;
+            }
+            ?>
+
+
+          </p>
+          
         </td>
       </tr>
 

@@ -4,18 +4,17 @@ $this->load->view("partial/header");
 $this->load->view("partial/header_admin");
 ?>
 
-<div class="col-md-12">
+<div class="table-responsive">
   <div>
     <?php var_dump($query);?>
     <br/>
-    <table id="table_id" class="table table-striped table-bordered table-responsive">
+    <table id="table_id" class="table table-responsive table-striped table-bordered">
       <thead>
         <tr>
             <th>Paper ID</th>
             <th>Title</th>
             <th>Keywords</th>
             <th>Abstract</th>
-            <th>Status</th>
           <th style="width:80px;">Action
           </p></th>
         </tr>
@@ -28,7 +27,6 @@ $this->load->view("partial/header_admin");
                  <td><?php echo $paper->paper_name;?></td>
                  <td><?php echo $paper->paper_keywords;?></td>
                  <td><?php echo $paper->abstract;?></td>
-                 <td><?php echo $paper->status;?></td>
                 <td>
                   <a class="btn btn-info" href="<?php echo base_url('admins/show/');echo $paper->paper_id;?>" ><i class="fa fa-eye"></i></a>
                   <a class="btn btn-info" href="<?php echo base_url('admins/view/');echo $paper->paper_id;?>" ><i class="fa fa-edit"></i></a>

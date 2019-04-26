@@ -42,7 +42,7 @@ $this->load->view("partial/header_normal");
       <label>Date of Birth</label>
       <div class="input-group">
             <span class="fa fa-calendar" area-hidden="true"></span>
-            <input type="text" id="datepicker" name="dob" value="<?php echo set_value('dob'); ?>" placeholder="Date of Birth">
+            <input type="text" data-provide="datepicker" name="dob" value="<?php echo set_value('dob'); ?>" placeholder="Date of Birth">
       </div>
       <label>Email Address</label>
       <div class="input-group">
@@ -68,12 +68,6 @@ $this->load->view("partial/header_normal");
             </div>
       </div>
 
-
-<script type="text/javascript">
-      $(document).ready(function(){
-            $("#datepicker").datepicker();
-      });
-</script>
 
 <style type="text/css">
 /*-- Reset-Code --*/
@@ -625,14 +619,5 @@ h5 {
 </style>
 
 <!-- SELECT * FROM `authors` JOIN users ON authors.user_id = users.user_id -->
-
-
-<script type="text/javascript">
-      $(document).ready(function(){
-            $("#datepicker").datepicker();
-      });
-</script>
-
-
 
 <?php $this->load->view("partial/footer");?>

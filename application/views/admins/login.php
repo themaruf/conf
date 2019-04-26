@@ -34,8 +34,6 @@ $this->load->view("partial/header_normal");
       <input type="password" name="password" value="<?php echo set_value('password'); ?>" placeholder="password"/>
     </div>
       <button>Login</button>
-      <p class="message">Not registered? <a href="<?php echo base_url();?>admins/signup">Create an account</a></p>
-<?php echo form_close(); ?>
   </div>
 </div> 
 			</div>

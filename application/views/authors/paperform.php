@@ -2,14 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view("partial/header");
 $this->load->view("partial/header_author");
-//var_dump($review_data);
-
-$temp_files = glob(__dir__.'/*');
-foreach($temp_files as $file) {
-  print_r($file);
-  echo "<br/>";
-}
-
+//var_dump($paper_files_data);
 ?>
 <div>
   <h1>Update Paper<h2>
@@ -44,16 +37,19 @@ foreach($temp_files as $file) {
           <p>
             
             <?php
-            //todo show same type name file
-            // echo base_url();
-            foreach (glob(base_url() . '/uploads/*.{pdf}') as $filename) {
-                print_r($filename);
+            $i=1;
+            foreach ($paper_files_data as $file) {
+            ?>
+                <a href="<?php echo base_url('authors/showPaper/').$file->file_name;?>" target="_blank"><b>version <?php echo $i?></b> -  <?php echo $file->file_name?></a>
+            <?php
+            echo "<br/>";
+            $i++;
             }
             ?>
 
 
           </p>
-          <a href="<?php echo base_url('authors/showPaper/').$paper_data->paper_id;?>" target="_blank"><?php echo $paper_data->file_url?></a>
+          
           <input type="file" name="paper_file" id="paper_file">
         </td>
       </tr>

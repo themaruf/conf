@@ -171,6 +171,12 @@ class Admin extends CI_Model
 
         $this->db->delete('paper_author', array('paper_id' => $paper_id));
 
+        $this->db->delete('paper_files', array('paper_id' => $paper_id));
+        
+        $this->db->delete('paper_reviewer', array('paper_id' => $paper_id));
+        
+        $this->db->delete('review_history', array('paper_id' => $paper_id));
+
         $this->db->trans_complete();
 
         if ($this->db->trans_status() === FALSE){

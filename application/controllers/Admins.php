@@ -29,11 +29,11 @@ class Admins extends CI_Controller {
 		$this->load->view('admins/papers',$data);
 	}
 
-	//touched
-	public function signup()
-	{
-		$this->load->view('admins/signup');
-	}
+	// //touched
+	// public function signup()
+	// {
+	// 	$this->load->view('admins/signup');
+	// }
 
 	//touched
 	public function login()
@@ -77,43 +77,43 @@ class Admins extends CI_Controller {
     	}
 	}
 
-	public function validate()
-	{
-		$this->form_validation->set_error_delimiters('<div class="error">', '</div>');
-		$this->form_validation->set_rules('first_name', 'First Name', 'required');
-  	    $this->form_validation->set_rules('last_name', 'Last Name', 'required');
-  	    $this->form_validation->set_rules('phone_number', 'Phone Number', 'required');
-        $this->form_validation->set_rules('password', 'Password', 'required|min_length[2]|alpha_numeric');
-        $this->form_validation->set_rules('passconf', 'Confirm Password', 'required|matches[password]|min_length[2]|alpha_numeric');
-        $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
+	// public function validate()
+	// {
+	// 	$this->form_validation->set_error_delimiters('<div class="error">', '</div>');
+	// 	$this->form_validation->set_rules('first_name', 'First Name', 'required');
+ //  	    $this->form_validation->set_rules('last_name', 'Last Name', 'required');
+ //  	    $this->form_validation->set_rules('phone_number', 'Phone Number', 'required');
+ //        $this->form_validation->set_rules('password', 'Password', 'required|min_length[2]|alpha_numeric');
+ //        $this->form_validation->set_rules('passconf', 'Confirm Password', 'required|matches[password]|min_length[2]|alpha_numeric');
+ //        $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
 
-        if ($this->form_validation->run() == FALSE)
-        {
-            $this->load->view('admins/signup');
-        }
-        else
-        {
-        	if($this->Admin->exists($this->input->post('email')))
-        	{
-        		$data['message'] = "email is already in use";
-        		$this->load->view('admins/signup', $data);
-        	}
-        	else{
-        		$first_name = $this->input->post('first_name');
-        		$last_name = $this->input->post('last_name');
-        		$phone = $this->input->post('phone_number');
-        		$dob = $this->input->post('dob');
-        		$email = $this->input->post('email');
-                $password = $this->input->post('password');
-                //check if inserted into db
-                if($this->Admin->signup_new_user($first_name, $last_name, $phone, $dob, $email, $password)){
-                	$data['message'] = "Your account is created";
-        			$this->load->view('admins/login', $data);
-                }
-        	}
+ //        if ($this->form_validation->run() == FALSE)
+ //        {
+ //            $this->load->view('admins/signup');
+ //        }
+ //        else
+ //        {
+ //        	if($this->Admin->exists($this->input->post('email')))
+ //        	{
+ //        		$data['message'] = "email is already in use";
+ //        		$this->load->view('admins/signup', $data);
+ //        	}
+ //        	else{
+ //        		$first_name = $this->input->post('first_name');
+ //        		$last_name = $this->input->post('last_name');
+ //        		$phone = $this->input->post('phone_number');
+ //        		$dob = $this->input->post('dob');
+ //        		$email = $this->input->post('email');
+ //                $password = $this->input->post('password');
+ //                //check if inserted into db
+ //                if($this->Admin->signup_new_user($first_name, $last_name, $phone, $dob, $email, $password)){
+ //                	$data['message'] = "Your account is created";
+ //        			$this->load->view('admins/login', $data);
+ //                }
+ //        	}
             
-        }
-	}
+ //        }
+	// }
 
 	public function editinfo(){
 		$data['admin_info'] = $this->Admin->get_admin($this->session->userdata('admin_id'));
@@ -185,8 +185,8 @@ class Admins extends CI_Controller {
 	      }
 	}
 
-	public function showpaper($paper_id){
-		$data['paper_id'] = $paper_id;
+	public function showpaper($paper_name){
+		$data['paper_name'] = $paper_name;
 		$this->load->view('admins/showpaper',$data);
 	}
 
@@ -194,6 +194,7 @@ class Admins extends CI_Controller {
 		if($this->Admin->paper_exists($paper_id)){
 			$data['paper_data'] = $this->Admin->get_paper_by_id($paper_id);
 			$data['co_author_data'] = $this->Admin->get_co_author_by_id($paper_id);
+			$data['paper_files_data'] = $this->Author->get_files_by_id($paper_id);
 			$data['assigned_reviewers'] = $this->Admin->get_assigned_reviewers_details($paper_id);
 			$data['review_data'] = $this->Admin->get_review_history($paper_id);
 

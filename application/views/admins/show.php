@@ -60,7 +60,18 @@ $this->load->view("partial/header_admin");
       <tr>
         <th class="srink" scope="row">File</th>
         <td>
-          <a href="<?php echo base_url('admins/showpaper/').$paper_data->paper_id;?>" target="_blank"><?php echo $paper_data->file_url?></a>
+          <div> 
+            <?php
+            $i=1;
+            foreach ($paper_files_data as $file) {
+            ?>
+                <a href="<?php echo base_url('admins/showPaper/').$file->file_name;?>" target="_blank"><b>version <?php echo $i?></b> -  <?php echo $file->file_name?></a>
+            <?php
+            echo "<br/>";
+            $i++;
+            }
+            ?>
+          </div>
         </td>
       </tr>
 
