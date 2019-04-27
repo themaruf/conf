@@ -52,6 +52,7 @@
 <script>
   $.widget.bridge('uibutton', $.ui.button);
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="<?php echo base_url();?>bootstrap/js/bootstrap.min.js"></script>
   <script src="<?php echo base_url('datatables/datatables.min.js')?>"></script>

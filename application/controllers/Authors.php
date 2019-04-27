@@ -59,6 +59,124 @@ class Authors extends CI_Controller {
 		}
 	}
 
+	//callback function
+    public function file_check($str){
+        $allowed_mime_type_arr = array('application/pdf');
+        $mime = get_mime_by_extension($_FILES['paper_file']['name']);
+        if(isset($_FILES['paper_file']['name']) && $_FILES['paper_file']['name']!=""){
+            if(in_array($mime, $allowed_mime_type_arr)){
+                return true;
+            }else{
+                $this->form_validation->set_message('file_check', 'Please select only pdf file.');
+                return false;
+            }
+        }else{
+            $this->form_validation->set_message('file_check', 'Please choose a file to upload.');
+            return false;
+        }
+    }
+
+	public function paper_add()
+	{
+
+		$this->form_validation->set_error_delimiters('<div class="error">', '</div>');
+		$this->form_validation->set_rules('paper_title', 'Paper Title', 'required');
+  	    $this->form_validation->set_rules('keywords', 'Keyword', 'required');
+  	    $this->form_validation->set_rules('abstract', 'Abstract', 'required');
+  	    $this->form_validation->set_rules('paper_file', '', 'callback_file_check');
+
+
+        if ($this->form_validation->run() == FALSE)
+        {
+            $this->load->view('authors/paperformadd');
+        }else
+        {
+			$co_author_name_array = $this->input->post('name');
+			$co_author_email_array = $this->input->post('email');
+			print_r($co_author_name_array);
+			print_r($co_author_email_array);
+
+			date_default_timezone_set('Asia/Dhaka');
+			$date = date('Y-m-d');
+			$timestamp = date('Y-m-d G:i:s');
+			$unique_id = $this->session->userdata('author_id').time().$this->session->userdata('author_id');
+
+
+			$config = array(
+			'upload_path' => "./uploads/",
+			'allowed_types' => "pdf",
+			'overwrite' => FALSE,
+			'max_size' => "8048000", // Can be set to particular file size , here it is 8 MB
+			'file_name' => $unique_id
+			);
+
+			//echo var_dump($config['upload_path']);
+			$this->load->library('upload', $config);
+			$this->upload->initialize($config);
+
+			if($this->upload->do_upload('paper_file'))
+			{
+				$data = array('upload_data' => $this->upload->data());
+				//print_r($data);
+			}
+
+			$paper_data = array(
+				  'paper_id' => $unique_id,
+				  'paper_name' => $this->input->post('paper_title') == NULL ? '' : $this->input->post('paper_title'),
+				  'paper_keywords' => $this->input->post('keywords') == NULL ? '' : $this->input->post('keywords'),
+				  'added_time' => $timestamp,
+				  'abstract' => $this->input->post('abstract') == NULL ? '' : $this->input->post('abstract'),
+				  'status' => 1,
+				  'deleted' => 0,
+			);
+	      	$paper_file_data = array(
+	      		'paper_id' => $unique_id,
+	      		'file_name' => $data['upload_data']['file_name'],
+	      		'upload_time' => $timestamp,
+	      	);
+			$paper_author_data = array(
+				'author_id' => $this->session->userdata('author_id'),
+				'paper_id' => $unique_id,
+			);
+
+
+	        $insert = $this->Author->add_paper($paper_data,$paper_author_data,$paper_file_data,$co_author_name_array,$co_author_email_array);
+	      //successfull insert
+			if($insert)
+			{
+				echo json_encode(array("result" => TRUE));
+				//send mail to co authors
+				// Load PHPMailer library
+				$this->load->library('phpmailer_lib');
+				// PHPMailer object
+				$mail = $this->phpmailer_lib->load();
+				// Add a recipient
+				$mail->addAddress($email);
+				// Email subject
+				$mail->Subject = 'A Paper is submitted on ConfMag';  
+				// Email body content
+				$mailContent = "<h1>Your Paper is Submitted on ConfMag</h1>";
+				$mail->Body = $mailContent;
+				// Send email
+				if(!$mail->send()){
+				    echo 'Message could not be sent.';
+				    echo 'Mailer Error: ' . $mail->ErrorInfo;
+				}else{
+				    echo 'Message has been sent';
+				}
+
+				redirect('authors/papers');
+			}
+			else
+			{
+				echo json_encode(array("result" => FALSE));
+				redirect('authors/view');
+			}
+        }
+
+	}
+
+
 	public function signup()
 	{
 		$this->load->view('authors/signup');
@@ -124,14 +242,14 @@ class Authors extends CI_Controller {
         {
         	if($this->Author->exists($this->input->post('email')))
         	{
-        		$data['message'] = "email is already in use";
-        		$this->load->view('authors/signup', $data);
+        		$this->form_validation->set_message('email', 'Email is already in use');
+        		$this->load->view('authors/signup');
         	}
         	else{
         		$first_name = $this->input->post('first_name');
         		$last_name = $this->input->post('last_name');
         		$phone = $this->input->post('phone_number');
-        		$dob = $this->input->post('dob');
+        		$dob = date('Y-m-d',strtotime($this->input->post('dob')));
         		$email = $this->input->post('email');
                 $password = $this->encrypt->encode($this->input->post('password'));
                 //check if inserted into db
@@ -214,110 +332,6 @@ class Authors extends CI_Controller {
 	      {
 	        echo json_encode(array("result" => FALSE));
 	      }
-	}
-
-	public function paper_add(){
-
-		$co_author_name_array = $this->input->post('name');
-		$co_author_email_array = $this->input->post('email');
-		print_r($co_author_name_array);
-		print_r($co_author_email_array);
-
-	  date_default_timezone_set('Asia/Dhaka');
-      $date = date('Y-m-d');
-      $timestamp = date('Y-m-d G:i:s');
-      $unique_id = $this->session->userdata('author_id').time().$this->session->userdata('author_id');
-
-
-		$config = array(
-		'upload_path' => "./uploads/",
-		'allowed_types' => "pdf",
-		'overwrite' => FALSE,
-		'max_size' => "8048000", // Can be set to particular file size , here it is 8 MB
-		'file_name' => $unique_id
-		);
-
-		//echo var_dump($config['upload_path']);
-		$this->load->library('upload', $config);
-		$this->upload->initialize($config);
-
-		if($this->upload->do_upload('paper_file'))
-		{
-			$data = array('upload_data' => $this->upload->data());
-			//print_r($data);
-		}
-
-      $paper_data = array(
-      	  'paper_id' => $unique_id,
-      	  'paper_name' => $this->input->post('paper_title') == NULL ? '' : $this->input->post('paper_title'),
-          'paper_keywords' => $this->input->post('keywords') == NULL ? '' : $this->input->post('keywords'),
-          'added_time' => $timestamp,
-          'abstract' => $this->input->post('abstract') == NULL ? '' : $this->input->post('abstract'),
-          'status' => 1,
-          'deleted' => 0,
-        );
-      $paper_file_data = array(
-      		'paper_id' => $unique_id,
-      		'file_name' => $data['upload_data']['file_name'],
-      		'upload_time' => $timestamp,
-      );
-      $paper_author_data = array(
-    	'author_id' => $this->session->userdata('author_id'),
-    	'paper_id' => $unique_id,
-      );
-
-
-      $insert = $this->Author->add_paper($paper_data,$paper_author_data,$paper_file_data,$co_author_name_array,$co_author_email_array);
-      //successfull insert
-      if($insert)
-      {
-        echo json_encode(array("result" => TRUE));
-        //send mail to co authors
-        // Load PHPMailer library
-        $this->load->library('phpmailer_lib');
-        // PHPMailer object
-        $mail = $this->phpmailer_lib->load();
-        // Add a recipient
-        $mail->addAddress($email);
-        // Email subject
-        $mail->Subject = 'A Paper is submitted on ConfMag';  
-        // Email body content
-        $mailContent = "<h1>Your Paper is Submitted on ConfMag</h1>";
-        $mail->Body = $mailContent;
-        // Send email
-        if(!$mail->send()){
-            echo 'Message could not be sent.';
-            echo 'Mailer Error: ' . $mail->ErrorInfo;
-        }else{
-            echo 'Message has been sent';
-        }
-        redirect('authors/papers');
-      }
-      else
-      {
-        echo json_encode(array("result" => FALSE));
-        redirect('authors/view');
-      }
-	}
-
-	public function get_filename($path, $filename){
-	    if ($pos = strrpos($filename, '.')) {
-	           $name = substr($filename, 0, $pos);
-	           $ext = substr($filename, $pos);
-	    } else {
-	           $name = $filename;
-	    }
-
-	    $newpath = $path.'/'.$filename;
-	    $newname = $filename;
-	    $counter = 0;
-	    while (file_exists($newpath)) {
-	           $newname = $name .'_'. $counter . $ext;
-	           $newpath = $path.'/'.$newname;
-	           $counter++;
-	     }
-
-	    return $newname;
 	}
 
 	public function paper_update(){
