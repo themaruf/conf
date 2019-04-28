@@ -13,8 +13,8 @@
         <li <?php if($this->uri->segment(2)=="papers"){echo 'class="nav-item active"';}?> class="nav-item">
           <a class="nav-link" href="<?php echo base_url('admins/papers');?>">Submitted Papers</a>
         </li>
-        <li <?php if($this->uri->segment(2)=="invitation"){echo 'class="nav-item active"';}?> class="nav-item">
-          <a class="nav-link" href="<?php echo base_url('admins/invitation');?>">Invite</a>
+        <li <?php if($this->uri->segment(2)=="settings"){echo 'class="nav-item active"';}?> class="nav-item">
+          <a class="nav-link" href="<?php echo base_url('admins/settings');?>">Settings</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -22,7 +22,7 @@
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
             <a <?php if($this->uri->segment(2)=="papers"){echo 'class="dropdown-item active"';}?> class="dropdown-item" href="<?php echo base_url('admins/papers');?>">Submitted Papers</a>
-            <a <?php if($this->uri->segment(2)=="invitation"){echo 'class="dropdown-item active"';}?> class="dropdown-item" href="<?php echo base_url('admins/invitation');?>">Invite Reviewer</a>
+            <a <?php if($this->uri->segment(2)=="settings"){echo 'class="dropdown-item active"';}?> class="dropdown-item" href="<?php echo base_url('admins/settings');?>">Settings</a>
 
         <div class="dropdown-divider"></div>
             <a class="dropdown-item logout" href="<?php echo base_url('admins/logout');?>">Logout</a>

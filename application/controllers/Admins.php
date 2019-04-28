@@ -8,6 +8,15 @@ class Admins extends CI_Controller {
         parent::__construct();
     }
 
+    //check session
+    private function _is_logged_in() {
+        if($this->session->userdata('admin_id')){
+            return true;        
+        } else {
+            return false;
+        }
+    }
+
     //touched
 	public function index()
 	{
@@ -24,9 +33,14 @@ class Admins extends CI_Controller {
 
 	//touched
 	public function papers(){
-		$data['papers'] = $this->Admin->get_all_papers();
-		$data['query']  = $this->Admin->get_last_query();
-		$this->load->view('admins/papers',$data);
+		if($this->_is_logged_in()){
+			$data['papers'] = $this->Admin->get_all_papers();
+			$data['query']  = $this->Admin->get_last_query();
+			$this->load->view('admins/papers',$data);
+		}
+		else{
+			redirect('admins/index');
+		}
 	}
 
 	// //touched
@@ -116,54 +130,74 @@ class Admins extends CI_Controller {
 	// }
 
 	public function editinfo(){
-		$data['admin_info'] = $this->Admin->get_admin($this->session->userdata('admin_id'));
-		$this->load->view('admins/editinfo',$data);
+		if($this->_is_logged_in()){
+			$data['admin_info'] = $this->Admin->get_admin($this->session->userdata('admin_id'));
+			$this->load->view('admins/editinfo',$data);
+		}
+		else{
+			redirect('admins/index');
+		}
 	}
 
 	public function saveinfo(){
-		$admin_data = array(
-			'address_line_1' => $this->input->post('address_line_1'),
-			'address_line_2' => $this->input->post('address_line_2'),
-			'city' => $this->input->post('city'),
-			'country' => $this->input->post('country'),
-			'description' => $this->input->post('description'),
-			'affiliation' => $this->input->post('affiliation'),
-			'website' => $this->input->post('website'),
-		);
+		if($this->_is_logged_in()){
+			$admin_data = array(
+				'address_line_1' => $this->input->post('address_line_1'),
+				'address_line_2' => $this->input->post('address_line_2'),
+				'city' => $this->input->post('city'),
+				'country' => $this->input->post('country'),
+				'description' => $this->input->post('description'),
+				'affiliation' => $this->input->post('affiliation'),
+				'website' => $this->input->post('website'),
+			);
 
-		if($this->Admin->saveinfo($this->session->userdata('admin_id'), $admin_data)){
-			redirect('admins/index');
+			if($this->Admin->saveinfo($this->session->userdata('admin_id'), $admin_data)){
+				redirect('admins/index');
+			}
+			else{
+				redirect('admins/editinfo');
+			}
 		}
 		else{
-			redirect('admins/editinfo');
+			redirect('admins/index');
 		}
 	}
 
 	public function view($paper_id){
-		if($this->Admin->paper_exists($paper_id)){
-			$data['paper_data'] = $this->Admin->get_paper_by_id($paper_id);
-			$data['co_author_data'] = $this->Admin->get_co_author_by_id($paper_id);
-			print_r($data['co_author_data']);
-			$data['reviewers'] = $this->Admin->get_all_reviewers();
-			$data['assigned_reviewers'] = $this->Admin->get_assigned_reviewers($paper_id);
-			print_r($data['assigned_reviewers'] );
-			//echo $this->Admin->get_last_query();
-			$this->load->view('admins/paperform',$data);
+		if($this->_is_logged_in()){
+			if($this->PartialModel->is_valid_paper($paper_id)){
+				$data['paper_data'] = $this->Admin->get_paper_by_id($paper_id);
+				$data['co_author_data'] = $this->Admin->get_co_author_by_id($paper_id);
+				//print_r($data['co_author_data']);
+				$data['reviewers'] = $this->Admin->get_all_reviewers();
+				$data['assigned_reviewers'] = $this->Admin->get_assigned_reviewers($paper_id);
+				//print_r($data['assigned_reviewers'] );
+				//echo $this->Admin->get_last_query();
+				$this->load->view('admins/paperform',$data);
+			}
+			else{
+				redirect('admins/papers');
+			}
 		}
 		else{
-			echo "nothing found";
+			redirect('admins/index');
 		}
 	}
 
 	public function assign_paper(){
-		$reviewers = $this->input->post('reviewers');
-		$paper_id = $this->input->post('paper_id');
+		if($this->_is_logged_in()){
+			$reviewers = $this->input->post('reviewers');
+			$paper_id = $this->input->post('paper_id');
 
-		if($this->Admin->assign_paper($paper_id, $reviewers)){
-			echo json_encode(array("result" => TRUE));
+			if($this->Admin->assign_paper($paper_id, $reviewers)){
+				echo json_encode(array("result" => TRUE));
+			}
+			else{
+				echo json_encode(array("result" => FALSE));
+			}
 		}
 		else{
-			echo json_encode(array("result" => FALSE));
+			redirect('admins/index');
 		}
 	}
 
@@ -174,90 +208,116 @@ class Admins extends CI_Controller {
 	}
 
 	public function paper_delete($paper_id){
-	    $query = $this->Admin->delete_by_id($paper_id);
-	    if($query)
-	      {
-	        echo json_encode(array("result" => TRUE));
-	      }
-	      else
-	      {
-	        echo json_encode(array("result" => FALSE));
-	      }
+		if($this->_is_logged_in()){
+		    $query = $this->Admin->delete_by_id($paper_id);
+		    if($query){
+				echo json_encode(array("result" => TRUE));
+			}
+			else{
+				echo json_encode(array("result" => FALSE));
+			}
+		}
+		else{
+			redirect('admins/index');
+		}
 	}
 
 	public function showpaper($paper_name){
-		$data['paper_name'] = $paper_name;
-		$this->load->view('admins/showpaper',$data);
+		if($this->_is_logged_in()){
+			$data['paper_name'] = $paper_name;
+			$this->load->view('admins/showpaper',$data);
+		}
+		else{
+			redirect('admins/index');
+		}
 	}
 
 	public function show($paper_id){
-		if($this->Admin->paper_exists($paper_id)){
-			$data['paper_data'] = $this->Admin->get_paper_by_id($paper_id);
-			$data['co_author_data'] = $this->Admin->get_co_author_by_id($paper_id);
-			$data['paper_files_data'] = $this->Author->get_files_by_id($paper_id);
-			$data['assigned_reviewers'] = $this->Admin->get_assigned_reviewers_details($paper_id);
-			$data['review_data'] = $this->Admin->get_review_history($paper_id);
+		if($this->_is_logged_in()){
+			if($this->PartialModel->is_valid_paper($paper_id)){
+				$data['paper_data'] = $this->Admin->get_paper_by_id($paper_id);
+				$data['co_author_data'] = $this->Admin->get_co_author_by_id($paper_id);
+				$data['paper_files_data'] = $this->Author->get_files_by_id($paper_id);
+				$data['assigned_reviewers'] = $this->Admin->get_assigned_reviewers_details($paper_id);
+				$data['review_data'] = $this->Admin->get_review_history($paper_id);
 
-			foreach ($data['review_data'] as $rev) {
-				//appending score text for showing comment timeline
-				$rev->review_score_text = $this->PartialModel->return_score_text($rev->review_score);
+				foreach ($data['review_data'] as $rev) {
+					//appending score text for showing comment timeline
+					$rev->review_score_text = $this->PartialModel->return_score_text($rev->review_score);
+				}
+
+				$this->load->view('admins/show',$data);
 			}
-
-			$this->load->view('admins/show',$data);
+			else{
+				redirect('admins/papers');
+			}
 		}
 		else{
-			echo "nothing found";
+			redirect('admins/index');
 		}
 	}
 
-	public function invitation(){
-		date_default_timezone_set('Asia/Dhaka');
-        $unique_id = $this->session->userdata('admin_id').time().$this->session->userdata('admin_id');
-        $data['invitation_id'] = $unique_id;
-		$this->load->view('admins/invitation',$data);
-	}
-
-	private function setup_mail(){
-
+	public function settings(){
+		if($this->_is_logged_in()){
+			date_default_timezone_set('Asia/Dhaka');
+	        $unique_id = $this->session->userdata('admin_id').time().$this->session->userdata('admin_id');
+	        $data['invitation_id'] = $unique_id;
+			$this->load->view('admins/settings',$data);
+		}
+		else{
+			redirect('admins/index');
+		}
 	}
 
 	public function send_invitation(){
-		$invitation_id = $this->input->post('invitation_id');
-		$email = $this->input->post('email');
-		$reg_link = base_url('reviewers/register/').$invitation_id;
+		if($this->_is_logged_in()){
+			$invitation_id = $this->input->post('invitation_id');
+			$email = $this->input->post('email');
+			$reg_link = base_url('reviewers/register/').$invitation_id;
 
-		// Load PHPMailer library
-        $this->load->library('phpmailer_lib');
-        // PHPMailer object
-        $mail = $this->phpmailer_lib->load();
-        // Add a recipient
-        $mail->addAddress($email);
-        // Email subject
-        $mail->Subject = 'Invitation on ConfMag';  
-        // Email body content
-        $mailContent = "<h1>Invitation on ConfMag</h1>
-            <p>Register as a reviewer on ConfMag</p>
-            <a href=$reg_link target='_blank'>Register as a reviewer on ConfMag</a>";
-        $mail->Body = $mailContent;
-        // Send email
-        if(!$mail->send()){
-            echo 'Message could not be sent.';
-            echo 'Mailer Error: ' . $mail->ErrorInfo;
-        }else{
-            echo 'Message has been sent';
-        }
+			// Load PHPMailer library
+	        $this->load->library('phpmailer_lib');
+	        // PHPMailer object
+	        $mail = $this->phpmailer_lib->load();
+	        // Add a recipient
+	        $mail->addAddress($email);
+	        // Email subject
+	        $mail->Subject = 'Invitation on ConfMag';  
+	        // Email body content
+	        $mailContent = "<h1>Invitation on ConfMag</h1>
+	            <p>Register as a reviewer on ConfMag</p>
+	            <a href=$reg_link target='_blank'>Register as a reviewer on ConfMag</a>";
+	        $mail->Body = $mailContent;
+	        // Send email
+	        if(!$mail->send()){
+	            echo 'Message could not be sent.';
+	            echo 'Mailer Error: ' . $mail->ErrorInfo;
+	        }else{
+	            echo 'Message has been sent';
+	        }
 
 
-		$this->Admin->send_invitation($invitation_id, $email);
-
+			$this->Admin->send_invitation($invitation_id, $email);
+		}
+		else{
+			redirect('admins/index');
+		}
 	}
 
-	// public function sendmail(){
-	//     $from = "maruf01676@gmail.com";
-	//     $to = "hasan.m.maruf@gmail.com";
-	//     $subject = "Checking PHP mail";
-	//     $message = "PHP mail works just fine";
-	//     $headers = "From:" . $from;
-	//     echo( mail($to,$subject,$message, $headers));
-	// }
+	public function download_all_papers(){
+		if($this->_is_logged_in()){
+		    $this->load->library('zip');
+
+		    $path = FCPATH.'/uploads/';
+		    //$path = base_url().'/uploads/';
+
+		    $this->zip->read_dir($path);
+
+		    // Download the file to your desktop. Name it "my_backup.zip"
+		    $this->zip->download('confmag_papers.zip');
+		}
+		else{
+			redirect('admins/index');
+		}
+	}
 }

@@ -6,7 +6,7 @@ $this->load->view("partial/header_author");
 <!-- https://codepen.io/gab/pen/Bxpwi -->
 <div>
   <div class="table-responsive">
-    <table id="table_id" class="table table-striped table-bordered table-responsive">
+    <table id="table_id" class="table table-striped table-bordered">
       <thead>
         <tr>
             <th style="width:15%;">Paper ID</th>

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view("partial/header");
-$this->load->view("partial/header_admin");
+$this->load->view("partial/header_author");
 ?>
 <div>
   <h1>Edit information<h2>

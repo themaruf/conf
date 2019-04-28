@@ -5,10 +5,10 @@ $this->load->view("partial/header_reviewer");
 ?>
 
 <div class="col-md-12">
-  <div>
+  <div class="table-responsive">
     <?php //var_dump($query);?>
     <br/>
-    <table id="table_id" class="table table-striped table-bordered table-responsive">
+    <table id="table_id" class="table table-striped table-bordered">
       <thead>
         <tr>
             <th>Paper ID</th>
@@ -51,7 +51,7 @@ $this->load->view("partial/header_reviewer");
   $(document).ready( function () {
       $('#table_id').dataTable({
        "columnDefs": [
-          { "targets": [4,5],
+          { "targets": [2,3],
            "orderable": false }
         ],
 
@@ -60,7 +60,7 @@ $this->load->view("partial/header_reviewer");
         },
 
         "columnDefs": [
-          { "targets": [3,4,5],
+          { "targets": [2,3],
            "searchable": false }
         ],
         "pageLength": 10

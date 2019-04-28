@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view("partial/header");
 $this->load->view("partial/header_admin");
-// var_dump($paper_data);
+//var_dump($paper_data);
 ?>
 <div>
   <h1>Choose Reviewer<h2>
@@ -12,7 +12,7 @@ $this->load->view("partial/header_admin");
     <tbody>
       <tr>
         <th class="srink" scope="row">Paper ID</th>
-        <td><?php echo $paper_data->paper_id;?> <a class="btn btn-info pull-right" href="<?php echo base_url('admins/show/');echo $paper_data->paper_id;?>" ><i class="fa fa-eye"></i></a></td>
+        <td><?php echo $paper_data->paper_id;?><a class="btn btn-info pull-right" href="<?php echo base_url('admins/show/');echo $paper_data->paper_id;?>" ><i class="fa fa-eye"></i></a></td>
       </tr>
       <tr>
         <th class="srink" scope="row">Paper Title</th>
@@ -81,7 +81,7 @@ $this->load->view("partial/header_admin");
         $.ajax({
             type:'POST',
             url:'<?php echo base_url("admins/assign_paper"); ?>',
-            data:{'reviewers': reviewers_selected, 'paper_id': <?php echo $paper_data->paper_id;?>},
+            data:{'reviewers': reviewers_selected, 'paper_id': '<?php echo $paper_data->paper_id;?>'},
             success:function(data)
             {
               if(data)

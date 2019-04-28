@@ -9,15 +9,6 @@ class Admin extends CI_Model
 
             return ($this->db->get()->num_rows() == 1);
         }
-
-        //touched
-        public function paper_exists($paper_id)
-        {
-            $this->db->from('papers');  
-            $this->db->where('paper_id', $paper_id);
-
-            return ($this->db->get()->num_rows() == 1);
-        }
         
         //touched
         public function signup_new_user($first_name, $last_name, $phone, $dob, $email, $password)

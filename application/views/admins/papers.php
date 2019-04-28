@@ -3,20 +3,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view("partial/header");
 $this->load->view("partial/header_admin");
 ?>
-
 <div class="table-responsive">
   <div>
-    <?php var_dump($query);?>
+    <?php //var_dump($query);?>
     <br/>
-    <table id="table_id" class="table table-responsive table-striped table-bordered">
+    <table id="table_id" class="table table-striped table-bordered">
       <thead>
         <tr>
             <th>Paper ID</th>
             <th>Title</th>
             <th>Keywords</th>
             <th>Abstract</th>
-          <th style="width:80px;">Action
-          </p></th>
+          <th style="width:80px;">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -51,7 +49,7 @@ $this->load->view("partial/header_admin");
   $(document).ready( function () {
       $('#table_id').dataTable({
        "columnDefs": [
-          { "targets": [4,5],
+          { "targets": [2,3],
            "orderable": false }
         ],
 
@@ -60,7 +58,7 @@ $this->load->view("partial/header_admin");
         },
 
         "columnDefs": [
-          { "targets": [3,4,5],
+          { "targets": [2,3],
            "searchable": false }
         ],
         "pageLength": 10

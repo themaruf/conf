@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view("partial/header");
 $this->load->view("partial/header_reviewer");
-var_dump($review_data);
+//var_dump($review_data);
 ?>
 <div>
   <h1>Evaluate Paper<h2>

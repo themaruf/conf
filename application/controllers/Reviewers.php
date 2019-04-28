@@ -8,6 +8,15 @@ class Reviewers extends CI_Controller {
         parent::__construct();
     }
 
+    //check session
+    private function _is_logged_in() {
+        if($this->session->userdata('reviewer_id')){
+            return true;        
+        } else {
+            return false;
+        }
+    }
+
     //touched
 	public function index()
 	{
@@ -24,55 +33,63 @@ class Reviewers extends CI_Controller {
 
 	//touched
 	public function papers(){
-		$data['papers'] = $this->Reviewer->get_all_papers($this->session->userdata('reviewer_id'));
-		$data['query']  = $this->Reviewer->get_last_query();
-		$this->load->view('reviewers/papers',$data);
-	}
-
-	public function view($paper_id = -1){
-		if($paper_id > 0){
-			$data['paper_data'] = $this->Reviewer->get_paper_by_id($paper_id);
-			$data['paper_files_data'] = $this->Reviewer->get_files_by_id($paper_id);
-			//getting this reviewer's review history
-			$data['review_data'] = $this->Reviewer->get_review_history($paper_id, $this->session->userdata('reviewer_id'));
-
-			foreach ($data['review_data'] as $rev) {
-				//appending score text for showing comment timeline
-				$rev->review_score_text = $this->PartialModel->return_score_text($rev->review_score);
-			}
-
-
-			$this->load->view('reviewers/paperform',$data);
+		if($this->_is_logged_in()){
+			$data['papers'] = $this->Reviewer->get_all_papers($this->session->userdata('reviewer_id'));
+			$data['query']  = $this->Reviewer->get_last_query();
+			$this->load->view('reviewers/papers',$data);
 		}
 		else{
-			$data['paper_data'] = (object)[
-									  "paper_name" => "",
-									  "paper_keywords" => "",
-									  "abstract" => "",
-									  "file_url" => ""
-									];
-			$this->load->view('reviewers/paperform',$data);
+			redirect('reviewers/index');
+		}
+	}
+
+	public function view($paper_id = NULL){
+		if($this->_is_logged_in()){
+			if($this->PartialModel->is_valid_paper($paper_id)){
+				$data['paper_data'] = $this->Reviewer->get_paper_by_id($paper_id);
+				$data['paper_files_data'] = $this->Reviewer->get_files_by_id($paper_id);
+				//getting this reviewer's review history
+				$data['review_data'] = $this->Reviewer->get_review_history($paper_id, $this->session->userdata('reviewer_id'));
+
+				foreach ($data['review_data'] as $rev) {
+					//appending score text for showing comment timeline
+					$rev->review_score_text = $this->PartialModel->return_score_text($rev->review_score);
+				}
+
+				$this->load->view('reviewers/paperform',$data);
+			}
+			else{
+				redirect('reviewers/papers');
+			}
+		}
+		else{
+			redirect('reviewers/index');
 		}
 	}
 
 	public function evaluatepaper(){
-		$review_score = $this->input->post('review_score');
-		$review_comments = $this->input->post('review_comments');
-		$paper_id = $this->input->post('paper_id');
-		$reviewer_id = $this->session->userdata('reviewer_id');
+		if($this->_is_logged_in()){
+			$review_score = $this->input->post('review_score');
+			$review_comments = $this->input->post('review_comments');
+			$paper_id = $this->input->post('paper_id');
+			$reviewer_id = $this->session->userdata('reviewer_id');
 
-		date_default_timezone_set('Asia/Dhaka');
-	    $timestamp = date('Y-m-d G:i:s');
+			date_default_timezone_set('Asia/Dhaka');
+		    $timestamp = date('Y-m-d G:i:s');
 
-		if($this->Reviewer->evaluate_paper($paper_id, $review_score, $review_comments, $reviewer_id, $timestamp)){
-			redirect('reviewers/papers');
+			if($this->Reviewer->evaluate_paper($paper_id, $review_score, $review_comments, $reviewer_id, $timestamp)){
+				redirect('reviewers/papers');
+			}
+			else{
+				redirect('reviewers/evaluatepaper');
+			}
 		}
 		else{
-			redirect('reviewers/evaluatepaper');
+			redirect('reviewers/index');
 		}
 	}
 
-	//touched
+	//signup
 	public function register($reg_id)
 	{
 		if($this->Reviewer->check_valid_reg_id($reg_id)){
@@ -167,28 +184,39 @@ class Reviewers extends CI_Controller {
 	}
 
 	public function editinfo(){
-		$data['reviewer_info'] = $this->Reviewer->get_reviewer($this->session->userdata('reviewer_id'));
-		$this->load->view('reviewers/editinfo',$data);
+		if($this->_is_logged_in()){
+			$data['reviewer_info'] = $this->Reviewer->get_reviewer($this->session->userdata('reviewer_id'));
+			$this->load->view('reviewers/editinfo',$data);
+		}
+		else{
+			redirect('reviewers/index');
+		}
+
 	}
 
 	public function saveinfo(){
-		$reviewer_data = array(
-			'address_line_1' => $this->input->post('address_line_1'),
-			'address_line_2' => $this->input->post('address_line_2'),
-			'city' => $this->input->post('city'),
-			'country' => $this->input->post('country'),
-			'description' => $this->input->post('description'),
-			'affiliation' => $this->input->post('affiliation'),
-			'website' => $this->input->post('website'),
-			'keywords' => $this->input->post('keywords'),
-			'cv_url' => $this->input->post('cv_url'),
-		);
+		if($this->_is_logged_in()){
+			$reviewer_data = array(
+				'address_line_1' => $this->input->post('address_line_1'),
+				'address_line_2' => $this->input->post('address_line_2'),
+				'city' => $this->input->post('city'),
+				'country' => $this->input->post('country'),
+				'description' => $this->input->post('description'),
+				'affiliation' => $this->input->post('affiliation'),
+				'website' => $this->input->post('website'),
+				'keywords' => $this->input->post('keywords'),
+				'cv_url' => $this->input->post('cv_url'),
+			);
 
-		if($this->Reviewer->saveinfo($this->session->userdata('reviewer_id'), $reviewer_data)){
-			redirect('reviewers/index');
+			if($this->Reviewer->saveinfo($this->session->userdata('reviewer_id'), $reviewer_data)){
+				redirect('reviewers/index');
+			}
+			else{
+				redirect('reviewers/editinfo');
+			}
 		}
 		else{
-			redirect('reviewers/editinfo');
+			redirect('reviewers/index');
 		}
 	}
 
@@ -211,8 +239,13 @@ class Reviewers extends CI_Controller {
 	// }
 
 	public function showPaper($paper_name){
-		$data['paper_name'] = $paper_name;
-		$this->load->view('reviewers/showpaper',$data);
+		if($this->_is_logged_in()){
+			$data['paper_name'] = $paper_name;
+			$this->load->view('reviewers/showpaper',$data);
+		}
+		else{
+			redirect('reviewers/index');
+		}
 	}
 
 }

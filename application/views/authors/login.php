@@ -593,11 +593,6 @@ h5 {
 }
 /** /Responsive **/
 
-
-	
-
 </style>
-
-<!-- SELECT * FROM `authors` JOIN users ON authors.user_id = users.user_id -->
 
 <?php $this->load->view("partial/footer");?>
