@@ -13,6 +13,9 @@
         <li <?php if($this->uri->segment(2)=="about"){echo 'class="nav-item active"';}?> class="nav-item">
           <a class="nav-link" href="<?php echo base_url('home/about');?>">About Us</a>
         </li>
+        <li <?php if($this->uri->segment(2)=="contact"){echo 'class="nav-item active"';}?> class="nav-item">
+          <a class="nav-link" href="<?php echo base_url('home/contact');?>">Contact Us</a>
+        </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Login As

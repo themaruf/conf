@@ -26,7 +26,7 @@ $this->load->view("partial/header_author");
                 <td>
                   <a class="btn btn-info" href="<?php echo base_url('authors/show/');echo $paper->paper_id;?>" ><i class="fa fa-eye"></i></a>
                    <a class="btn btn-info" href="<?php echo base_url('authors/view/');echo $paper->paper_id;?>" ><i class="fa fa-edit"></i></a>
-                  <a class="btn btn-danger" onclick="delete_paper(<?php echo $paper->paper_id;?>)"><i class="fa fa-trash"></i></a>
+                  <a class="btn btn-danger" onclick="delete_paper('<?php echo $paper->paper_id;?>')"><i class="fa fa-trash"></i></a>
 
                 </td>
               </tr>

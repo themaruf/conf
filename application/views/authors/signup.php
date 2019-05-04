@@ -14,13 +14,13 @@ $this->load->view("partial/header_normal");
                         </div>
                   </div>
                   <div class="w3_info">
-                        <h2>Create your Account</h2>
+                        <h2>Create your Account As Author</h2>
                         <p>Enter your details to signup</p>
  <div class="login">
   <div class="form" id="login-form">
       
 <?php echo validation_errors();?>
-      <div class="error">'
+      <div class="error">
            <!--  <?php if ( $message!= null ) echo $message;?> -->
       </div>
 <?php echo form_open('authors/validate', array('id' => 'signup-form')) ?>

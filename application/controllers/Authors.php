@@ -64,23 +64,6 @@ class Authors extends CI_Controller {
 		}
 	}
 
-	//callback function
-    public function file_check($str){
-        $allowed_mime_type_arr = array('application/pdf');
-        $mime = get_mime_by_extension($_FILES['paper_file']['name']);
-        if(isset($_FILES['paper_file']['name']) && $_FILES['paper_file']['name']!=""){
-            if(in_array($mime, $allowed_mime_type_arr)){
-                return true;
-            }else{
-                $this->form_validation->set_message('file_check', 'Please select only pdf file.');
-                return false;
-            }
-        }else{
-            $this->form_validation->set_message('file_check', 'Please choose a file to upload.');
-            return false;
-        }
-    }
-
 	public function paper_add()
 	{
 		if($this->_is_logged_in()){
@@ -240,7 +223,7 @@ class Authors extends CI_Controller {
   	    $this->form_validation->set_rules('phone_number', 'Phone Number', 'required');
         $this->form_validation->set_rules('password', 'Password', 'required|min_length[2]|alpha_numeric');
         $this->form_validation->set_rules('passconf', 'Confirm Password', 'required|matches[password]|min_length[2]|alpha_numeric');
-        $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
+        $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|callback_check_my_email');
 
         if ($this->form_validation->run() == FALSE)
         {
@@ -262,7 +245,7 @@ class Authors extends CI_Controller {
                 $password = $this->input->post('password');
                 //check if inserted into db
                 if($this->Author->signup_new_user($first_name, $last_name, $phone, $dob, $email, $password)){
-                	$data['message'] = "Your account is created";
+                	$data['message'] = "Your account is created!";
         			$this->load->view('authors/login', $data);
                 }
         		//$this->Author->signup_new_user($first_name, $last_name, $phone, $dob, $email, $password);
@@ -344,6 +327,7 @@ class Authors extends CI_Controller {
 		if($this->_is_logged_in()){
 		    $query = $this->Author->delete_by_id($paper_id);
 		    if($query){
+
 				echo json_encode(array("result" => TRUE));
 			}
 			else{
@@ -425,4 +409,34 @@ class Authors extends CI_Controller {
 			redirect('authors/index');
 		}	
 	}
+
+
+	//callback function for file type check
+    public function file_check($str){
+        $allowed_mime_type_arr = array('application/pdf');
+        $mime = get_mime_by_extension($_FILES['paper_file']['name']);
+        if(isset($_FILES['paper_file']['name']) && $_FILES['paper_file']['name']!=""){
+            if(in_array($mime, $allowed_mime_type_arr)){
+                return true;
+            }else{
+                $this->form_validation->set_message('file_check', 'Please select only pdf file.');
+                return false;
+            }
+        }else{
+            $this->form_validation->set_message('file_check', 'Please choose a file to upload.');
+            return false;
+        }
+    }
+
+	//callback function for email check
+    public function check_my_email($email){
+    	if ($this->Author->exists($email)){
+           $this->form_validation->set_message('check_my_email', 'Email is already in use');
+            return false;
+    	}else{
+    		return true;
+    	}
+    }
+
+
 }
