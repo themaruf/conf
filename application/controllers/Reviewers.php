@@ -90,14 +90,18 @@ class Reviewers extends CI_Controller {
 	}
 
 	//signup
-	public function register($reg_id)
+	public function register($reg_id = NULL)
 	{
-		if($this->Reviewer->check_valid_reg_id($reg_id)){
-			$data['invitation_id'] = $reg_id;
-			$this->load->view('reviewers/signup',$data);
-		}
-		else{
-			$this->load->view('reviewers/invalid_signup');
+		if($reg_id != NULL){
+			if($this->Reviewer->check_valid_reg_id($reg_id)){
+				$data['invitation_id'] = $reg_id;
+				$this->load->view('reviewers/signup',$data);
+			}
+			else{
+				$this->load->view('reviewers/invalid_signup');
+			}
+		}else{
+			redirect('reviewers/index');
 		}	
 	}
 
@@ -153,9 +157,13 @@ class Reviewers extends CI_Controller {
         $this->form_validation->set_rules('passconf', 'Confirm Password', 'required|matches[password]|min_length[2]|alpha_numeric');
         $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
 
+
+        $invitation_id = $this->input->post('invitation_id');
+
         if ($this->form_validation->run() == FALSE)
         {
-            $this->load->view('reviewers/signup');
+        	$data['invitation_id'] = $invitation_id;
+            $this->load->view('reviewers/signup',$data);
         }
         else
         {
@@ -171,7 +179,6 @@ class Reviewers extends CI_Controller {
         		$dob = $this->input->post('dob');
         		$email = $this->input->post('email');
                 $password = $this->input->post('password');
-                $invitation_id = $this->input->post('invitation_id');
                 //check if inserted into db
                 if($this->Reviewer->signup_new_user($invitation_id, $first_name, $last_name, $phone, $dob, $email, $password)){
                 	$data['message'] = "Your account is created";

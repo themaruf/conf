@@ -3,50 +3,44 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view("partial/header");
 $this->load->view("partial/header_normal");
 ?>
-	<div class="container-fluid">
-		<div class="agile_info">
-			<div class="w3l_form">
-				<div class="center_grid_info">
-					<h1>CONFMAG</h1>
-					<p style="margin-right: 50px; text-align: center;">A Conference Management System for Research Development</p>
-					<img src="<?php echo base_url();?>images/icon.png" alt="Confmag" />
-				</div>
-			</div>
-			<div class="w3_info">
-				<h2>Reviewer Login to your Account</h2>
-				<p>Enter your details to login.</p>
+  <div class="container-fluid">
+    <div class="agile_info">
+      <div class="w3l_form">
+        <div class="center_grid_info">
+          <h1>CONFMAG</h1>
+          <p style="margin-right: 50px; text-align: center;">A Conference Management System for Research Development</p>
+          <img src="<?php echo base_url();?>images/icon.png" alt="Confmag" />
+        </div>
+      </div>
+      <div class="w3_info">
+        <h2>Account Recovery</h2>
+        <p>Enter Email to recover your account</p>
  <div class="login">
   <div class="form" id="login-form">
-	
+  
 <?php echo validation_errors();?>
-      <div class="error">
+      <div class="info">
             <?php if ( $message != null ) echo $message;?>
       </div>
-<?php echo form_open('reviewers/login', array('id' => 'login-form')) ?>
-	<label>Email Address</label>
-	<div class="input-group">
-	  <span class="fa fa-envelope" aria-hidden="true"></span>
+<?php echo form_open('home/reviewer_forgot_password_send_mail', array('id' => 'login-form')) ?>
+  <label>Email</label>
+  <div class="input-group">
+    <span class="fa fa-envelope" aria-hidden="true"></span>
       <input type="text" name="email" value="<?php echo set_value('email'); ?>" placeholder="email"/>
     </div>
-    <label>Password</label>
-    <div class="input-group">
-      <span class="fa fa-lock" aria-hidden="true"></span>
-      <input type="password" name="password" value="<?php echo set_value('password'); ?>" placeholder="password"/>
-    </div>
-      <button>Login</button>
-      	<h5 class="message">Forgot Password? <a href="<?php echo base_url();?>home/reviewer_forgot_password">Click Here</a></h5>
+      <button>Send Recovery Code</button>
 <?php echo form_close(); ?>
   </div>
 </div> 
-			</div>
-		</div>
-	</div>
+      </div>
+    </div>
+  </div>
 
 
 <script type="text/javascript">
-	$(document).ready(function(){
-		$("#datepicker").datepicker();
-	});
+  $(document).ready(function(){
+    $("#datepicker").datepicker();
+  });
 </script>
 
 <style type="text/css">
@@ -57,6 +51,10 @@ ol,ul{list-style:none;margin:0px;padding:0px;}
 blockquote,q{quotes:none;}
 blockquote:before,blockquote:after,q:before,q:after{content:'';content:none;}
 table{border-collapse:collapse;border-spacing:0;}
+.info{
+  color: #3399cc;
+  padding-bottom: 15px;
+}
 a{text-decoration:none;}
 .txt-rt{text-align:right;}/* text align right */
 .txt-lt{text-align:left;}/* text align left */
@@ -66,77 +64,77 @@ a{text-decoration:none;}
 .clear{clear:both;}/* clear float */
 .pos-relative{position:relative;}/* Position Relative */
 .pos-absolute{position:absolute;}/* Position Absolute */
-.vertical-base{	vertical-align:baseline;}/* vertical align baseline */
-.vertical-top{	vertical-align:top;}/* vertical align top */
-nav.vertical ul li{	display:block;}/* vertical menu */
-nav.horizontal ul li{	display: inline-block;}/* horizontal menu */
+.vertical-base{ vertical-align:baseline;}/* vertical align baseline */
+.vertical-top{  vertical-align:top;}/* vertical align top */
+nav.vertical ul li{ display:block;}/* vertical menu */
+nav.horizontal ul li{ display: inline-block;}/* horizontal menu */
 img{max-width:70%; margin:30px 0px 0px 35px;}
 body {
-	padding: 0;
-	margin: 0;
-	background: #fff;
+  padding: 0;
+  margin: 0;
+  background: #fff;
     min-height: 100vh;
     background: linear-gradient(to left, #f5f5f5 50%, #fff 50%);
-	font-family: 'Raleway', sans-serif;
+  font-family: 'Raleway', sans-serif;
 }
 body a {
-	transition: 0.5s all;
-	-webkit-transition: 0.5s all;
-	-moz-transition: 0.5s all;
-	-o-transition: 0.5s all;
-	-ms-transition: 0.5s all;
-	text-decoration: none;
-	letter-spacing:1px;
+  transition: 0.5s all;
+  -webkit-transition: 0.5s all;
+  -moz-transition: 0.5s all;
+  -o-transition: 0.5s all;
+  -ms-transition: 0.5s all;
+  text-decoration: none;
+  letter-spacing:1px;
 }
 body a:hover {
-	text-decoration: none;
+  text-decoration: none;
 }
 body a:focus, a:hover {
-	text-decoration: none;
+  text-decoration: none;
 }
 input[type="button"], input[type="submit"] {
-	transition: 0.5s all;
-	-webkit-transition: 0.5s all;
-	-moz-transition: 0.5s all;
-	-o-transition: 0.5s all;
-	-ms-transition: 0.5s all;
+  transition: 0.5s all;
+  -webkit-transition: 0.5s all;
+  -moz-transition: 0.5s all;
+  -o-transition: 0.5s all;
+  -ms-transition: 0.5s all;
 }
 h1, h2, h3, h4, h5, h6 {
-	margin: 0;
-	padding: 0;
+  margin: 0;
+  padding: 0;
     font-family: 'Raleway', sans-serif;
     font-weight:600;
-	letter-spacing:1px;
-		
+  letter-spacing:1px;
+    
 }
 .clear{
-	clear:both;
+  clear:both;
 }
 p {
-	margin: 0;
-	color:#666;
-	letter-spacing:1px;
-	line-height:1.8em;
-	font-size:16px;
-	font-weight:400;
+  margin: 0;
+  color:#666;
+  letter-spacing:1px;
+  line-height:1.8em;
+  font-size:16px;
+  font-weight:400;
 }
 .row{
-	margin:0px;
-	padding:0px;
+  margin:0px;
+  padding:0px;
 }
 ul {
-	margin: 0;
-	padding: 0;
+  margin: 0;
+  padding: 0;
 }
 label {
-	margin: 0;
+  margin: 0;
 }
 a:focus, a:hover {
-	text-decoration: none;
-	outline: none;
+  text-decoration: none;
+  outline: none;
 }
 img{
-	width:100%;
+  width:100%;
 }
 /*-- //Reset-Code --*/
 
@@ -151,39 +149,39 @@ img{
 }
 
 input[type="text"] {
-	font-size: 15px;
-	color: #333;
+  font-size: 15px;
+  color: #333;
     text-align: left;
     letter-spacing: 1px;
     padding: 14px 10px;
-	width:93%;
-	display:inline-block;
+  width:93%;
+  display:inline-block;
     box-sizing: border-box;
-   	border: none;
+    border: none;
     outline: none;
     background: transparent;
-	font-family: 'Raleway', sans-serif;
+  font-family: 'Raleway', sans-serif;
 }
 input[type="Password"] {
-	font-size: 15px;
-	color: #333;
+  font-size: 15px;
+  color: #333;
     text-align: left;
     letter-spacing: 1px;
     padding: 14px 10px;
-	width:93%;
-	display:inline-block;
+  width:93%;
+  display:inline-block;
     box-sizing: border-box;
-   	border: none;
+    border: none;
     outline: none;
     background: transparent;
-	font-family: 'Raleway', sans-serif;
+  font-family: 'Raleway', sans-serif;
 }
 .input-group {
     margin-top: 10px;
     margin-bottom: 20px;
-	padding: 3px 5px;
-	border: 1px solid #ddd;
-	background: #fff;
+  padding: 3px 5px;
+  border: 1px solid #ddd;
+  background: #fff;
 }
 .btn-block {
     background: #EB2A2E;
@@ -200,13 +198,13 @@ input[type="Password"] {
     font-size: 26px;
     margin-bottom: 10px;
     color: #333;
-    letter-spacing: 2px;	
+    letter-spacing: 2px;  
     text-transform: capitalize;
 }
 .w3_info h4 {
     display: inline-block;
     font-size: 15px;
-	padding: 8px 0px;
+  padding: 8px 0px;
     color: #444;
     text-transform: capitalize;
 }
@@ -217,15 +215,15 @@ a.btn.btn-block.btn-social.btn-facebook {
     text-align: center;
     font-size: 16px;
     font-weight: 600;
-	letter-spacing: 1px;
-	font-family: 'Raleway', sans-serif;
+  letter-spacing: 1px;
+  font-family: 'Raleway', sans-serif;
 }
 
 .w3_info {
     flex-basis: 50%;
-	-webkit-flex-basis: 50%;
+  -webkit-flex-basis: 50%;
     box-sizing: border-box;
-	padding: 3em 4em;
+  padding: 3em 4em;
     /* -webkit-box-shadow: 1px 0px 15px 0px rgba(0,0,0,0.2);
     -moz-box-shadow: 1px 0px 15px 0px rgba(0,0,0,0.2);
     box-shadow: 1px 0px 15px 0px rgba(0,0,0,0.2); */
@@ -287,11 +285,11 @@ input[type="checkbox" i] {
     display: none;
 }
 .agile_info {
-	display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
-	display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
-	display: -ms-flexbox;      /* TWEENER - IE 10 */
-	display: -webkit-flex;     /* NEW - Chrome */
-	display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+  display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+  display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  display: -ms-flexbox;      /* TWEENER - IE 10 */
+  display: -webkit-flex;     /* NEW - Chrome */
+  display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
 }
 .center_grid_info {
     padding-right: 3em;
@@ -299,7 +297,7 @@ input[type="checkbox" i] {
 .w3l_form {
     padding: 0px;
     flex-basis: 50%;
-	-webkit-flex-basis: 50%;
+  -webkit-flex-basis: 50%;
 }
 .w3_info p {
     padding-bottom: 30px;
@@ -342,19 +340,19 @@ h3.agileits {
 .input-group span.fa {
    font-size: 16px;
     vertical-align: middle;
-	box-sizing:border-box;
-	float:left;
+  box-sizing:border-box;
+  float:left;
     text-align: center;
-	width:6%;
+  width:6%;
     padding: 15px 0px;
-	color: #39B54A;
+  color: #39B54A;
 }
 h5 {
     text-align: left;
     margin: 10px 0px;
     font-size: 15px;
     font-weight: 600;
-	    color: #000;
+      color: #000;
 }
 .footer p {
     color: #666;
@@ -368,228 +366,228 @@ h5 {
 }
 /** Responsive **/
 @media screen and (max-width: 1440px){
-	.container {
-		width: 70%;
-		margin: 0 auto;
-	}
+  .container {
+    width: 70%;
+    margin: 0 auto;
+  }
 }
 @media screen and (max-width: 1366px){
-	.container {
-		width: 75%;
-	}
-	.center_grid_info h1 {
-		font-size: 40px;
-	}
+  .container {
+    width: 75%;
+  }
+  .center_grid_info h1 {
+    font-size: 40px;
+  }
 }
 @media screen and (max-width: 1080px){
-	.container {
-		width: 80%;
-	}
-	.w3_info h2 {
-		font-size: 24px;
-		letter-spacing: 1px;
-	}
-	.center_grid_info h1 {
-		font-size: 35px;
-	}
-	.w3_info {
-		padding: 3em 3em;
-	}
+  .container {
+    width: 80%;
+  }
+  .w3_info h2 {
+    font-size: 24px;
+    letter-spacing: 1px;
+  }
+  .center_grid_info h1 {
+    font-size: 35px;
+  }
+  .w3_info {
+    padding: 3em 3em;
+  }
 }
 @media screen and (max-width: 1024px){
-	.signupform {
-		padding: 1em 0;
-	}
-	.container {
-		width: 85%;
-	}
-	.center_grid_info {
-		padding-right: 3em;
-		padding-top: 2em;
-	}
+  .signupform {
+    padding: 1em 0;
+  }
+  .container {
+    width: 85%;
+  }
+  .center_grid_info {
+    padding-right: 3em;
+    padding-top: 2em;
+  }
 }
 @media screen and (max-width: 991px){
-	.w3_info h2 {
-		font-size: 24px;
-	}
-	h1 {
-		font-size: 40px;
-		letter-spacing: 2px;
-	}
+  .w3_info h2 {
+    font-size: 24px;
+  }
+  h1 {
+    font-size: 40px;
+    letter-spacing: 2px;
+  }
 }
 @media screen and (max-width: 900px){
-	
-	.container {
-		width: 90%;
-	}
-	.center_grid_info h4 {
-		font-size: 1em;
-	}
-	.w3_info {
-		padding: 3em 2.5em;
-	}
+  
+  .container {
+    width: 90%;
+  }
+  .center_grid_info h4 {
+    font-size: 1em;
+  }
+  .w3_info {
+    padding: 3em 2.5em;
+  }
 }
 @media screen and (max-width: 800px){
-	.container {
-		width: 95%;
-	}
-	input[type="text"],input[type="email"],input[type="password"] {
-		font-size: 14px;
-	}
-	.input-group span.fa {
-		font-size: 16px;
-		padding: 13px 0px;
-	}
-	.w3_info h2 {
-		font-size: 23px;
-	}
+  .container {
+    width: 95%;
+  }
+  input[type="text"],input[type="email"],input[type="password"] {
+    font-size: 14px;
+  }
+  .input-group span.fa {
+    font-size: 16px;
+    padding: 13px 0px;
+  }
+  .w3_info h2 {
+    font-size: 23px;
+  }
 }
 @media screen and (max-width: 768px){
-	.container {
-		width: 95%;
-	}
-	.w3_info h2 {
-		letter-spacing: 1px;
-	}
-	.center_grid_info h1 {
-		font-size: 30px;
-		letter-spacing: 1px;
-	}
-	.center_grid_info {
-		padding-right: 2em;
-	}
+  .container {
+    width: 95%;
+  }
+  .w3_info h2 {
+    letter-spacing: 1px;
+  }
+  .center_grid_info h1 {
+    font-size: 30px;
+    letter-spacing: 1px;
+  }
+  .center_grid_info {
+    padding-right: 2em;
+  }
 }
 @media screen and (max-width: 736px){
-	.center_grid_info h3 {
-		font-size: 1.7em;
-	}
-	.w3_info h2 {
-		font-size: 22px;
-	}
-	.w3_info {
-		padding: 3em 2em;
-	}
-	.footer p {
-		font-size: 14px;
-	}
-	.w3_info h4 {
-		font-size: 14px;
-	}
-	.footer p {
-		margin-top: 0em;
-		margin-bottom: 2em;
-	}
+  .center_grid_info h3 {
+    font-size: 1.7em;
+  }
+  .w3_info h2 {
+    font-size: 22px;
+  }
+  .w3_info {
+    padding: 3em 2em;
+  }
+  .footer p {
+    font-size: 14px;
+  }
+  .w3_info h4 {
+    font-size: 14px;
+  }
+  .footer p {
+    margin-top: 0em;
+    margin-bottom: 2em;
+  }
 }
 
 @media screen and (max-width: 684px){
-	.w3_info h2 {
-		font-size: 20px;
-		letter-spacing: 0px;
-	}
-	.center_grid_info h1 {
-		font-size: 26px;
-		letter-spacing: 1px;
-	}
+  .w3_info h2 {
+    font-size: 20px;
+    letter-spacing: 0px;
+  }
+  .center_grid_info h1 {
+    font-size: 26px;
+    letter-spacing: 1px;
+  }
 }
 @media screen and (max-width: 667px){
-	.container {
-		width: 80%;
-	}
+  .container {
+    width: 80%;
+  }
 }
 @media screen and (max-width: 640px){
-	h1 {
-		font-size: 37px;
-	}
-	.agile_info {
-		flex-direction: column;
-	}
-	body {
-		background: #FFF;
-	}
-	.center_grid_info {
-		padding-right: 0em;
-	}
+  h1 {
+    font-size: 37px;
+  }
+  .agile_info {
+    flex-direction: column;
+  }
+  body {
+    background: #FFF;
+  }
+  .center_grid_info {
+    padding-right: 0em;
+  }
 }
 @media screen and (max-width: 480px){
-	.w3l_form {
-		padding: 0em;
-	}
-	h1 {
-		font-size: 34px;
-	}
-	.w3_info {
-		padding: 3em 1em;
-	}
-	.footer {
-		margin: 0 1em;
-	}
-	.center_grid_info h1 {
-		margin: 0em 0em .5em 0em;
-	}
+  .w3l_form {
+    padding: 0em;
+  }
+  h1 {
+    font-size: 34px;
+  }
+  .w3_info {
+    padding: 3em 1em;
+  }
+  .footer {
+    margin: 0 1em;
+  }
+  .center_grid_info h1 {
+    margin: 0em 0em .5em 0em;
+  }
 }
 @media screen and (max-width: 414px){
-	.w3_info {
-		padding: 2em;
-	}
-	h1 {
-		font-size: 32px;
-		letter-spacing: 1px;
-	}
-	.center_grid_info p {
-		font-size: 14px;
-	}
-	.container {
-		width: 90%;
-	}
-	.center_grid_info {
-		padding-top: 1em;
-	}
-	.w3_info p {
-		font-size: 14px;
-	}
+  .w3_info {
+    padding: 2em;
+  }
+  h1 {
+    font-size: 32px;
+    letter-spacing: 1px;
+  }
+  .center_grid_info p {
+    font-size: 14px;
+  }
+  .container {
+    width: 90%;
+  }
+  .center_grid_info {
+    padding-top: 1em;
+  }
+  .w3_info p {
+    font-size: 14px;
+  }
 }
 @media screen and (max-width: 384px){
-	.center_grid_info h4 {
-		font-size: .9em;
-	}
-	.w3_info {
-		padding: 2em 1em;
-	}
-	.center_grid_info h1 {
-		font-size: 21px;
-		letter-spacing: 0px;
-	}
-	.w3_info h2 {
-		font-size: 18px;
-	}
+  .center_grid_info h4 {
+    font-size: .9em;
+  }
+  .w3_info {
+    padding: 2em 1em;
+  }
+  .center_grid_info h1 {
+    font-size: 21px;
+    letter-spacing: 0px;
+  }
+  .w3_info h2 {
+    font-size: 18px;
+  }
 }
 @media screen and (max-width: 375px){
-	.center_grid_info h3 {
-		font-size: 1.5em;
-	}
+  .center_grid_info h3 {
+    font-size: 1.5em;
+  }
 }
 @media screen and (max-width: 320px){
-	h1 {
-		font-size: 25px;
-		letter-spacing: 1px;
-	}
-	.w3_info h2 {
-		font-size: 18px;
-		letter-spacing: 0px;
-	}
-	.btn-danger {
-		padding: 13px 12px;
-		font-size: 13px;
-	}
-	input[type="text"], input[type="email"], input[type="password"] {
-		font-size: 13px;
-	}
-	.footer p {
-		font-size: 13px;
-	}
-	.footer p a{
-		font-size: 13px;
-	}
+  h1 {
+    font-size: 25px;
+    letter-spacing: 1px;
+  }
+  .w3_info h2 {
+    font-size: 18px;
+    letter-spacing: 0px;
+  }
+  .btn-danger {
+    padding: 13px 12px;
+    font-size: 13px;
+  }
+  input[type="text"], input[type="email"], input[type="password"] {
+    font-size: 13px;
+  }
+  .footer p {
+    font-size: 13px;
+  }
+  .footer p a{
+    font-size: 13px;
+  }
 }
 /** /Responsive **/
 

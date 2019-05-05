@@ -20,7 +20,7 @@ $this->load->view("partial/header_normal");
   <div class="form" id="login-form">
       
 <?php echo validation_errors();?>
-      <div class="error">'
+      <div class="error">
            <!--  <?php if ( $message!= null ) echo $message;?> -->
       </div>
 <?php echo form_open('reviewers/validate', array('id' => 'signup-form')) ?>

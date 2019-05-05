@@ -19,13 +19,13 @@ class PHPMailer_Lib
         $mail->SMTPDebug = 2;
         $mail->Host     = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'maruf01676@example.com';
+        $mail->Username = 'confmagassist@gmail.com';
         $mail->Password = '01827727057';
         $mail->SMTPSecure = 'ssl';
         $mail->Port     = 465;
         
-        $mail->setFrom('maruf01676@gmail.com', 'ConfMag');
-        $mail->addReplyTo('maruf01676@gmail.com', 'ConfMag');
+        $mail->setFrom('confmagassist@gmail.com', 'ConfMag');
+        $mail->addReplyTo('confmagassist@gmail.com', 'ConfMag');
         // Set email format to HTML
         $mail->isHTML(true);
         // SMTP configuration

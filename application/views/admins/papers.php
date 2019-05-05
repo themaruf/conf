@@ -13,7 +13,6 @@ $this->load->view("partial/header_admin");
             <th>Paper ID</th>
             <th>Title</th>
             <th>Keywords</th>
-            <th>Abstract</th>
           <th style="width:80px;">Action</th>
         </tr>
       </thead>
@@ -24,7 +23,6 @@ $this->load->view("partial/header_admin");
                  <td><?php echo $paper->paper_id;?></td>
                  <td><?php echo $paper->paper_name;?></td>
                  <td><?php echo $paper->paper_keywords;?></td>
-                 <td><?php echo $paper->abstract;?></td>
                 <td>
                   <a class="btn btn-info" href="<?php echo base_url('admins/show/');echo $paper->paper_id;?>" ><i class="fa fa-eye"></i></a>
                   <a class="btn btn-info" href="<?php echo base_url('admins/view/');echo $paper->paper_id;?>" ><i class="fa fa-edit"></i></a>

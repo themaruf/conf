@@ -327,8 +327,7 @@ class Authors extends CI_Controller {
 		if($this->_is_logged_in()){
 		    $query = $this->Author->delete_by_id($paper_id);
 		    if($query){
-
-				echo json_encode(array("result" => TRUE));
+		    	echo json_encode(array("result" => TRUE));
 			}
 			else{
 				echo json_encode(array("result" => FALSE));

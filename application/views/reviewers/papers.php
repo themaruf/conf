@@ -14,8 +14,6 @@ $this->load->view("partial/header_reviewer");
             <th>Paper ID</th>
             <th>Title</th>
             <th>Keywords</th>
-            <th>Abstract</th>
-            <th>Status</th>
           <th style="width:80px;">Action
           </p></th>
         </tr>
@@ -27,8 +25,6 @@ $this->load->view("partial/header_reviewer");
                  <td><?php echo $paper->paper_id;?></td>
                  <td><?php echo $paper->paper_name;?></td>
                  <td><?php echo $paper->paper_keywords;?></td>
-                 <td><?php echo $paper->abstract;?></td>
-                 <td><?php echo $paper->status;?></td>
                 <!-- <td><?php echo date("d-M-Y",strtotime($paper->created_date));?></td> -->
                 <td>
                   <a class="btn btn-info" href="<?php echo base_url('reviewers/view/');echo $paper->paper_id;?>" ><i class="fa fa-edit"></i></a>

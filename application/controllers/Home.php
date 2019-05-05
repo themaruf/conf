@@ -41,13 +41,13 @@ class Home extends CI_Controller {
 
 			//send it to db where mail is $this->input->post('email')
 			$mail_address =  $this->input->post('email');
-			if($this->PartialModel->recovery_identity_exist($mail_address)){
+			if($this->Author->recovery_identity_exist($mail_address)){
 				//recovery id is already exist 
 	        	$data['message'] = 'Recovery code is already sent to your email';
 	            $this->load->view('home/forgotpassword',$data);
 			}
 			else{
-				if($this->PartialModel->insert_recovery_identity($mail_address, $unique_id)){
+				if($this->Author->insert_recovery_identity($mail_address, $unique_id)){
 					//send recovery mail. link is: www.example.com/recover_password/unique_id
 					//todo
 
@@ -68,7 +68,7 @@ class Home extends CI_Controller {
 			redirect('home/index');
 		}
 		else{
-			if($this->PartialModel->is_valid_recovery_identity($recovery_identity)){
+			if($this->Author->is_valid_recovery_identity($recovery_identity)){
 				//echo "valid recovery code";
 				$data['message'] = '';
 				$data['recovery_identity'] = $recovery_identity;
@@ -100,7 +100,7 @@ class Home extends CI_Controller {
         	$password_data = array(
             	'password' => $password
         	);
-        	if($this->PartialModel->change_password($recovery_identity, $password_data)){
+        	if($this->Author->change_password($recovery_identity, $password_data)){
         		$data['message'] = 'Password is changed successfully';
 				$this->load->view('authors/login',$data);
         	}
@@ -129,7 +129,7 @@ class Home extends CI_Controller {
 	            $this->load->view('home/contact');
 	        }else
 	        {
-	        	$confmagContactEmail = "maruf01676@gmail.com";
+	        	$confmagContactEmail = "confmagassist@gmail.com";
 
 	        	$name = $this->input->post('name');
 	        	$email = $this->input->post('email');
@@ -156,8 +156,110 @@ class Home extends CI_Controller {
 				    redirect('home/index');
 				}
 	        }
-
 	}
+
+
+//reviewers password recovery parts
+
+	public function reviewer_forgot_password(){
+		$data['message'] = '';
+        $this->load->view('home/reviewerforgotpassword',$data);
+	}
+
+	public function reviewer_forgot_password_send_mail(){
+		$this->form_validation->set_error_delimiters('<div class="error">', '</div>');
+		$this->form_validation->set_rules('email', 'email', 'trim|required|valid_email|callback_reviewer_check_my_recovery_email');
+
+        //failed login
+        if ($this->form_validation->run() == FALSE)
+        {
+        	$data['message'] = '';
+            $this->load->view('home/reviewerforgotpassword',$data);
+        }
+        else{
+        	//generate an recovery_identity
+        	$this->load->helper('string');
+			$unique_id = random_string('alnum', 16);
+			$unique_id = $unique_id. uniqid();
+
+			//send it to db where mail is $this->input->post('email')
+			$mail_address =  $this->input->post('email');
+			if($this->Reviewer->recovery_identity_exist($mail_address)){
+				//recovery id is already exist 
+	        	$data['message'] = 'Recovery code is already sent to your email';
+	            $this->load->view('home/reviewerforgotpassword',$data);
+			}
+			else{
+				if($this->Reviewer->insert_recovery_identity($mail_address, $unique_id)){
+					//send recovery mail. link is: www.example.com/home/recover_password/unique_id
+					//todo
+
+					//send confirmation
+		        	$data['message'] = 'Mail is sent to your email';
+		            $this->load->view('home/reviewerforgotpassword',$data);
+				}
+				else{
+		        	$data['message'] = 'Oops! Something went wrong';
+		            $this->load->view('home/reviewerforgotpassword',$data);
+				}
+			}
+        }
+	}
+
+	public function reviewer_recover_password($recovery_identity = NULL){
+		if($recovery_identity == NULL){
+			redirect('home/index');
+		}
+		else{
+			if($this->Reviewer->is_valid_recovery_identity($recovery_identity)){
+
+				//echo "valid recovery code";
+				$data['message'] = '';
+				$data['recovery_identity'] = $recovery_identity;
+				$this->load->view('home/reviewerchangepassword',$data);
+			}
+			else{
+				//invalid recovery code
+				redirect('home/index');
+			}
+		}
+	}
+
+	public function reviewer_change_password(){
+		$recovery_identity = $this->input->post('recovery_identity');
+		$password = $this->input->post('password');
+		//echo $recovery_identity;
+
+		$this->form_validation->set_error_delimiters('<div class="error">', '</div>');
+        $this->form_validation->set_rules('password', 'Password', 'required|min_length[2]|alpha_numeric');
+        $this->form_validation->set_rules('passconf', 'Confirm Password', 'required|matches[password]|min_length[2]|alpha_numeric');
+
+        if ($this->form_validation->run() == FALSE)
+        {
+        	$data['message'] = '';
+           	$data['recovery_identity'] = $recovery_identity;
+			$this->load->view('home/reviewerchangepassword',$data);
+        }else{
+        	//change password
+        	$password_data = array(
+            	'password' => $password
+        	);
+        	if($this->Reviewer->change_password($recovery_identity, $password_data)){
+        		$data['message'] = 'Password is changed successfully';
+				$this->load->view('reviewers/login',$data);
+        	}
+        }
+	}
+
+	//callback function for email check
+    public function reviewer_check_my_recovery_email($email){
+    	if (!$this->Reviewer->exists($email)){
+           $this->form_validation->set_message('reviewer_check_my_recovery_email', 'No account found! Please check your email');
+            return false;
+    	}else{
+    		return true;
+    	}
+    }
 
 
 }
