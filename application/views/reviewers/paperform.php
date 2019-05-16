@@ -7,7 +7,7 @@ $this->load->view("partial/header_reviewer");
 <div>
   <h1>Evaluate Paper<h2>
 </div>
-<form action="<?php echo base_url('reviewers/evaluatepaper');?>" id="form" method="post" class="form-horizontal" enctype="multipart/form-data">
+<form action="<?php echo base_url('reviewers/evaluatepaper');?>" id="evaluate_form" method="post" class="form-horizontal" enctype="multipart/form-data">
 <div class="table-responsive-md">
   <table class="table table-bordered">
     <tbody>
@@ -68,7 +68,7 @@ $this->load->view("partial/header_reviewer");
          0 Neutral
          1 Weakly Accept
          2 Accept -->
-      <th class="srink" scope="row">Score</th>
+      <th class="srink" scope="row">Score<span class="error">*</span></th>
         <td>
             <select class="form-control" name="review_score" id="review_score">
                   <option value="-2">Reject</option>
@@ -81,9 +81,9 @@ $this->load->view("partial/header_reviewer");
       </tr>
 
       <tr>
-        <th class="srink" scope="row">Comment</th>
+        <th class="srink" scope="row">Comment<span class="error">*</span></th>
         <td>
-            <textarea name="review_comments" id="review_comments" class="form-control" rows="8"></textarea>
+            <textarea name="review_comments" id="review_comments" class="form-control required" rows="8"></textarea>
         </td>
       </tr>
 
@@ -98,6 +98,12 @@ $this->load->view("partial/header_reviewer");
 
 <?php $this->load->view("partial/footer"); ?>
 
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("#evaluate_form").validate();
+  });
+</script>
 
 
 <style type="text/css">

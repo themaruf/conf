@@ -12,7 +12,7 @@ $this->load->view("partial/header_normal");
         <div class="row">
           <div class="col-sm-8 col-sm-offset-2">
             <div>
-              <h2>CONTACT US FOR CONFERENCE</h2>
+              <h2 style="color: #fff">CONTACT US FOR CONFERENCE</h2>
             </div>
             <?php echo validation_errors();?>
             <form method="post" action="<?php echo base_url('home/sendmail');?>" id="form" data-form-title="CONTACT US">
@@ -50,6 +50,11 @@ $("#commentForm").validate();
 </script>
 
 <style type="text/css">
+
+body{
+  background-image: url("images/home.png");
+}
+
 section {
   max-width: 1170px;
   margin: auto auto;

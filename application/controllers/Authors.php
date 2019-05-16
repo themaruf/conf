@@ -133,26 +133,32 @@ class Authors extends CI_Controller {
 				if($insert)
 				{
 					echo json_encode(array("result" => TRUE));
-					//send mail to co authors
-					// Load PHPMailer library
-					$this->load->library('phpmailer_lib');
-					// PHPMailer object
-					$mail = $this->phpmailer_lib->load();
-					// Add a recipient
-					$mail->addAddress($email);
-					// Email subject
-					$mail->Subject = 'A Paper is submitted on ConfMag';  
-					// Email body content
-					$mailContent = "<h1>Your Paper is Submitted on ConfMag</h1>";
-					$mail->Body = $mailContent;
-					// Send email
-					if(!$mail->send()){
-					    echo 'Message could not be sent.';
-					    echo 'Mailer Error: ' . $mail->ErrorInfo;
-					}else{
-					    echo 'Message has been sent';
-					}
 
+					foreach ($co_author_email_array as $email) {
+						//send mail to co authors
+						// Load PHPMailer library
+						$this->load->library('phpmailer_lib');
+						// PHPMailer object
+						$mail = $this->phpmailer_lib->load();
+						// Add a recipient
+						$mail->addAddress($email);
+						// Email subject
+						$mail->Subject = 'A Paper is submitted on ConfMag';  
+						$paper_link = base_url('authors/showPaper/').$unique_id.".pdf";
+						$paper_title = $this->input->post('paper_title');
+						// Email body content
+						$mailContent = "<h1>Your Paper is Submitted on ConfMag ($paper_title)</h1><br/>
+										<p>$paper_link</p>";
+						$mail->Body = $mailContent;
+						// Send email
+						if(!$mail->send()){
+						    echo 'Message could not be sent.';
+						    echo 'Mailer Error: ' . $mail->ErrorInfo;
+						}else{
+						    echo 'Message has been sent';
+						}
+
+					}
 					redirect('authors/papers');
 				}
 				else
@@ -284,13 +290,8 @@ class Authors extends CI_Controller {
 	}
 
 	public function showpaper($paper_name){
-		if($this->_is_logged_in()){
 			$data['paper_name'] = $paper_name;
 			$this->load->view('authors/showpaper',$data);
-		}
-		else{
-			redirect('authors/index');
-		}
 	}
 
 	public function show($paper_id){

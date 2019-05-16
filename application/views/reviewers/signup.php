@@ -25,37 +25,37 @@ $this->load->view("partial/header_normal");
       </div>
 <?php echo form_open('reviewers/validate', array('id' => 'signup-form')) ?>
       <input type="hidden" name="invitation_id" value="<?php echo $invitation_id;?>"/>
-      <label>First Name</label>
+      <label>First Name<span class="error">*</span></label>
       <div class="input-group">
             <span class="fa fa-user" aria-hidden="true"></span>
             <input type="text" name="first_name" value="<?php echo set_value('first_name'); ?>" placeholder="First Name"/>
       </div>
-      <label>Last Name</label>
+      <label>Last Name<span class="error">*</span></label>
       <div class="input-group">
             <span class="fa fa-user" aria-hidden="true"></span>
             <input type="text" name="last_name" value="<?php echo set_value('last_name'); ?>" placeholder="Last Name"/>
       </div>
-      <label>Phone Number</label>
+      <label>Phone Number<span class="error">*</span></label>
       <div class="input-group">
             <span class="fa fa-phone" aria-hidden="true"></span>
             <input type="text" name="phone_number" value="<?php echo set_value('phone_number'); ?>" placeholder="Phone Number"/>
       </div>
-      <label>Date of Birth</label>
+      <label>Date of Birth<span class="error">*</span></label>
       <div class="input-group">
             <span class="fa fa-calendar" area-hidden="true"></span>
             <input type="text" id="datepicker" name="dob" value="<?php echo set_value('dob'); ?>" placeholder="Date of Birth">
       </div>
-      <label>Email Address</label>
+      <label>Email Address<span class="error">*</span></label>
       <div class="input-group">
             <span class="fa fa-envelope" aria-hidden="true"></span>
             <input type="text" name="email" value="<?php echo set_value('email'); ?>" placeholder="Email Address"/>
       </div>
-      <label>Password</label>
+      <label>Password<span class="error">*</span></label>
       <div class="input-group">
             <span class="fa fa-lock" aria-hidden="true"></span>
             <input type="password" name="password" placeholder="Password"/>
       </div>
-      <label>Confirm Password</label>
+      <label>Confirm Password<span class="error">*</span></label>
       <div class="input-group">
             <span class="fa fa-lock" aria-hidden="true"></span>
             <input type="password" name="passconf" placeholder="Confirm Password"/>  

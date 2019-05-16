@@ -23,7 +23,7 @@ $this->load->view("partial/header_admin");
 		        <td><input name="invitation_id" class="form-control" value="<?php echo $invitation_id;?>" type="text" readonly></td>
 		      </tr>
 		      <tr>
-		        <th class="srink" scope="row">Email</th>
+		        <th class="srink" scope="row">Email<span class="error">*</span></th>
 		        <td><input name="email" placeholder="Email" class="form-control required" type="email"></td>
 		      </tr>
 		      <tr>

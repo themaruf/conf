@@ -42,7 +42,7 @@ $this->load->view("partial/header_admin");
         </td>
       </tr>
       <tr>
-        <th class="srink" scope="row">Choose Reviewers</th>
+        <th class="srink" scope="row">Choose Reviewers<span class="error">*</span></th>
         <td>
             <select class="SlectBox" multiple="multiple" name="reviewers" id="reviewers">
               <?php foreach ($reviewers as $reviewer){
