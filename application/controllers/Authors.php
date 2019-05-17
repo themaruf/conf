@@ -157,7 +157,6 @@ class Authors extends CI_Controller {
 						}else{
 						    echo 'Message has been sent';
 						}
-
 					}
 					redirect('authors/papers');
 				}
